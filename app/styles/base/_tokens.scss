@@ -1,0 +1,34 @@
+@use "abstracts" as *;
+
+:root {
+  color-scheme: light;
+
+  // boje
+  --paper: #f3f2ec;
+  --paper-2: #e8e7df;
+  --ink: #151614;
+  --ink-hover: #2b2d29;
+  --ink-surface: #2a2c28;
+  --muted: #62655d;
+  --placeholder: #9a9c94;
+  --line: #{ink-a(0.14)};
+  --accent: #9eeb47; // lime iz logotipa — štedljivo
+  --accent-deep: #3f6b12; // tekst na svijetlom, klizač scrollbara
+
+  // tipografija
+  --font-sans: "Manrope", system-ui, sans-serif;
+  --font-display: "Archivo", sans-serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
+
+  // razmaci (fluidni između 390px i 1440px)
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --gutter: clamp(1.25rem, calc(1.25rem + 1.25 * (100vw - 24.375rem) / 65.625), 2.5rem);
+  --header-h: clamp(4.5rem, calc(4.5rem + 1.5 * (100vw - 24.375rem) / 65.625), 6rem);
+  --section-pad: clamp(1.5rem, 5vh, 3.5rem); // vertikalni razmak unutar sekcije
+
+  // pokret
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-bounce: cubic-bezier(0.28, 1.68, 0.52, 1);
+}

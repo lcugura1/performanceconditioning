@@ -1,0 +1,41 @@
+@use "sass:map";
+
+// Točke loma iz dizajna (max-width, desktop-first).
+$breakpoints: (
+  lg: 1080px, // hero/stats/programi/o meni/kontakt u jedan stupac
+  md: 959px, // nav sažet, sakriven logo tekst
+  sm: 720px, // popup postaje bottom sheet
+  xs: 640px, // mobitel: manji gutter i tipografija
+);
+
+// Mobilni izbornik — mora odgovarati MENU_QUERY u app/components/layout/Header.
+$menu-breakpoint: 40rem;
+
+@mixin below($key) {
+  @media (max-width: map.get($breakpoints, $key)) {
+    @content;
+  }
+}
+
+@mixin menu-mode {
+  @media (width < $menu-breakpoint) {
+    @content;
+  }
+}
+
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+// Sekcija visoka točno jedan ekran. Gornji padding uključuje header koji je
+// fixed i prelazi preko vrha sekcije, pa skok iz navigacije ne treba scroll-margin.
+@mixin screen-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding-block: calc(var(--header-h) + var(--section-pad)) var(--section-pad);
+}

@@ -1,0 +1,55 @@
+@use "abstracts" as *;
+
+// Otkrivanje pri skrolu (vidi app/hooks/useReveal.ts).
+// Početno skriveno stanje pali se samo kad JS radi: klasu .js-reveal na <html>
+// postavlja inline skripta u root.tsx prije prvog iscrtavanja.
+
+.rv {
+  transition: opacity 1s var(--ease), transform 1s var(--ease);
+}
+
+.rv-img {
+  transition: clip-path 1.3s var(--ease);
+
+  img {
+    transition: transform 1.6s var(--ease);
+  }
+}
+
+.rd1 { transition-delay: 0.1s; }
+.rd2 { transition-delay: 0.2s; }
+
+.js-reveal {
+  .rv:not([data-revealed]) {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+
+  .rv-img:not([data-revealed]) {
+    clip-path: inset(12% 0 0 0);
+
+    img {
+      transform: scale(1.12);
+    }
+  }
+
+  .rv-img[data-revealed] {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@include reduced-motion {
+  .js-reveal {
+    .rv:not([data-revealed]),
+    .rv-img:not([data-revealed]) {
+      opacity: 1;
+      transform: none;
+      clip-path: none;
+      transition: none;
+    }
+
+    .rv-img:not([data-revealed]) img {
+      transform: none;
+    }
+  }
+}

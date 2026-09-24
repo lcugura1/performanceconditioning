@@ -1,0 +1,16 @@
+// Globalni stilovi. Stilovi pojedinih komponenti i sekcija žive uz njih
+// (npr. app/sections/home/Hero/Hero.scss) i uvoze se iz .tsx datoteke.
+
+@use "base/tokens";
+@use "base/reset";
+@use "base/typography";
+@use "base/scrollbar";
+
+@use "components/icons";
+@use "components/buttons";
+@use "components/media";
+@use "components/glass";
+
+@use "utilities/a11y";
+@use "utilities/motion";
+@use "utilities/reveal";

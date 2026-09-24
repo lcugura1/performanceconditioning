@@ -1,0 +1,26 @@
+@use "abstracts" as *;
+
+html {
+  scrollbar-color: var(--accent-deep) var(--paper-2);
+  scrollbar-width: thin;
+}
+
+@supports not (scrollbar-color: auto) {
+  html::-webkit-scrollbar {
+    width: 0.625rem;
+  }
+
+  html::-webkit-scrollbar-track {
+    background: var(--paper-2);
+  }
+
+  html::-webkit-scrollbar-thumb {
+    background: var(--accent-deep);
+    border-radius: 999px;
+    border: 0.1875rem solid var(--paper-2);
+
+    &:hover {
+      background: var(--ink);
+    }
+  }
+}

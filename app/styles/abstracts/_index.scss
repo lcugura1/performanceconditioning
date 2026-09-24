@@ -1,0 +1,4 @@
+// Samo Sass (varijable, funkcije, mixini) — NIŠTA što proizvodi CSS.
+// Automatski se učitava u svaki .scss (vidi vite.config.ts → additionalData).
+@forward "breakpoints";
+@forward "functions";

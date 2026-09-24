@@ -1,0 +1,51 @@
+@use "abstracts" as *;
+
+// Ulazne animacije hera (pri učitavanju, bez JS-a)
+.in {
+  animation: up 1s var(--ease) both;
+}
+
+.dl1 { animation-delay: 0.05s; }
+.dl2 { animation-delay: 0.14s; }
+.dl3 { animation-delay: 0.23s; }
+.dl4 { animation-delay: 0.45s; }
+.dl5 { animation-delay: 0.6s; }
+.dl6 { animation-delay: 0.75s; }
+
+@keyframes up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rise {
+  from { transform: translateY(105%); }
+  to { transform: none; }
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@include reduced-motion {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+  }
+
+  .in {
+    animation: none;
+  }
+}
