@@ -1,0 +1,58 @@
+.gal {
+  @include screen-section;
+  overflow: hidden;
+
+  &__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: clamp(1.5rem, 4vh, 3rem);
+
+    @include below(xs) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}
+
+.strip {
+  overflow: hidden;
+
+  &__track {
+    display: flex;
+    width: max-content;
+    animation: marquee 60s linear infinite;
+  }
+
+  &:hover &__track {
+    animation-play-state: paused;
+  }
+
+  &__item {
+    flex-shrink: 0;
+    height: clamp(14rem, 50svh, 40rem);
+    margin-right: 16px;
+    border-radius: 4px;
+
+    &--portrait {
+      aspect-ratio: 2 / 3;
+    }
+
+    &--landscape {
+      aspect-ratio: 3 / 2;
+    }
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@include reduced-motion {
+  .strip__track {
+    animation: none;
+  }
+}

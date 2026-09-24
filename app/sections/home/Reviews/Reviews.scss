@@ -1,0 +1,130 @@
+.rev {
+  @include screen-section;
+
+  &__title {
+    margin-bottom: clamp(1.5rem, 5vh, 3.5rem);
+    padding-bottom: clamp(1rem, 3vh, 1.75rem);
+    border-bottom: 1px solid var(--ink);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: stretch;
+
+    @include below(lg) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // ---------- ocjena + fotka ----------
+  &__side {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 3vh, 2rem);
+  }
+
+  &__score {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+  }
+
+  &__num {
+    font: 700 clamp(72px, min(8vw, 13vh), 136px)/0.8 var(--font-display);
+    letter-spacing: -0.05em;
+  }
+
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  &__photo {
+    flex: 1;
+    min-height: 12rem;
+    max-height: 40svh;
+    border-radius: 4px;
+
+    img {
+      position: absolute;
+      inset: 0;
+      object-position: 35% center;
+    }
+
+    @include below(lg) {
+      display: none;
+    }
+  }
+
+  // ---------- sve recenzije kao jedan odlomak ----------
+  &__flow {
+    align-self: center;
+    font-family: var(--font-serif);
+    font-size: clamp(24px, min(2.5vw, 4.4vh), 42px);
+    line-height: 1.28;
+    letter-spacing: -0.005em;
+  }
+
+  &__item {
+    display: inline;
+    margin: 0;
+
+    blockquote {
+      display: inline;
+      margin: 0;
+    }
+
+    q {
+      quotes: "„" "“";
+    }
+
+    figcaption {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-left: 0.3em;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1;
+      letter-spacing: 0;
+      color: var(--muted);
+      white-space: nowrap;
+
+      b {
+        color: var(--ink);
+        font-weight: 700;
+      }
+    }
+
+    // kosi potez između recenzija
+    & + &::before {
+      content: "";
+      display: inline-block;
+      width: 0.9em;
+      height: 0.2em;
+      margin: 0 0.45em 0.2em 0.35em;
+      background: var(--accent);
+      transform: skewX(-30deg);
+      vertical-align: middle;
+    }
+  }
+}
+
+.stars {
+  display: flex;
+  gap: 3px;
+  color: var(--ink);
+
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+}
