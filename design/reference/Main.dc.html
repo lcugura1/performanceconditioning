@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Performance Conditioning — kondicijski trener</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&amp;family=Instrument+Serif:ital@0;1&amp;family=Manrope:wght@400;500;600;700&amp;display=swap">
+<style>
+:root,.site,.stage{color-scheme:light;--color-bg:#f3f2ec;--color-bg-deep:#e8e7df;--color-ink:#151614;--color-ink-muted:#62655d;--color-accent:#9eeb47;--color-thumb:#3f6b12;--color-thumb-hover:#151614;--font-sans:'Manrope',system-ui,sans-serif;--spacing-xs:.5rem;--spacing-sm:1rem;--spacing-gutter:clamp(1.25rem,calc(1.25rem + 1.25 * (100vw - 24.375rem) / 65.625),2.5rem);--spacing-header:clamp(4.5rem,calc(4.5rem + 1.5 * (100vw - 24.375rem) / 65.625),6rem);--ease-out-soft:cubic-bezier(.22,.61,.36,1);--ease-bounce:cubic-bezier(.28,1.68,.52,1)}
+html{scroll-behavior:smooth;scrollbar-color:var(--color-thumb) var(--color-bg-deep);scrollbar-width:thin;overflow-x:clip}
+@supports not (scrollbar-color:auto){
+  html::-webkit-scrollbar{width:.625rem}
+  html::-webkit-scrollbar-track{background:var(--color-bg-deep)}
+  html::-webkit-scrollbar-thumb{background:var(--color-thumb);border-radius:999px;border:.1875rem solid var(--color-bg-deep)}
+  html::-webkit-scrollbar-thumb:hover{background:var(--color-thumb-hover)}
+}
+body{margin:0;background:var(--color-bg);color:var(--color-ink);font-family:var(--font-sans);-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--color-ink);outline-offset:3px}
+a{color:#151614}a:hover{color:#3f6b12}
+*,*::before,*::after{box-sizing:border-box}
+img{display:block;max-width:100%}
+
+/* ---------- tokens ---------- */
+.site{--paper:#f3f2ec;--paper2:#e8e7df;--ink:#151614;--ink2:#1f211e;--text:#151614;--muted:#62655d;--line:rgba(21,22,20,.14);--accent:#9eeb47;--accent-deep:#3f6b12;--ease:cubic-bezier(.2,.7,.1,1);position:relative;width:100%;min-height:100vh;background:var(--paper);color:var(--text);overflow-x:clip;font-size:17px;line-height:1.6}
+.site section[id],.site header[id]{scroll-margin-top:var(--spacing-header)}
+.wrap{width:100%;max-width:1336px;margin:0 auto;padding:0 32px}
+.h{font-family:'Archivo',sans-serif;font-weight:700;letter-spacing:-.035em;line-height:.98;margin:0}
+.serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-style:italic;letter-spacing:-.01em}
+.h2{font-size:clamp(40px,5.4vw,80px)}
+.kicker{display:flex;align-items:center;gap:12px;margin:0 0 28px;font-size:13px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.kicker b{font-weight:700;color:var(--text)}
+.kicker i{width:36px;height:1px;background:currentColor;display:block}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:56px;padding:0 28px;border-radius:999px;font:700 16px/1 'Manrope',sans-serif;text-decoration:none;border:0;cursor:pointer;white-space:nowrap;transition:transform .35s var(--ease),background-color .3s,color .3s}
+.btn .ic{transition:transform .35s var(--ease)}
+.btn:hover .ic{transform:translateX(4px)}
+.btn--accent{background:var(--accent);color:var(--ink)}
+.btn--accent:hover{color:var(--ink);transform:translateY(-2px)}
+.btn--ink{background:var(--ink);color:var(--paper)}
+.btn--ink:hover{color:var(--paper);background:#2b2d29}
+.btn--sm{min-height:44px;padding:0 20px;font-size:15px}
+.btn--block{width:100%}
+.link{display:inline-flex;align-items:center;gap:10px;font-weight:700;text-decoration:none;color:var(--text);padding-bottom:4px;border-bottom:1.5px solid currentColor}
+.link:hover{color:var(--accent-deep)}
+.link .ic{transition:transform .35s var(--ease)}
+.link:hover .ic{transform:translateX(4px)}
+
+/* ---------- media ---------- */
+.media{position:relative;overflow:hidden;background:var(--paper2)}
+.media img{width:100%;height:100%;object-fit:cover}
+.ph{display:grid;place-items:center;background:var(--paper2);color:var(--muted)}
+.ph__in{display:flex;flex-direction:column;align-items:center;gap:10px;font-size:14px;font-weight:500;text-align:center;padding:16px}
+.ph__in .ic{width:32px;height:32px;stroke-width:1.4}
+
+/* ---------- liquid glass (header + menu panel) ---------- */
+.glass{background:rgba(243,242,236,.78);background:color-mix(in srgb,var(--color-bg) 78%,transparent);-webkit-backdrop-filter:blur(.75rem) saturate(180%);backdrop-filter:blur(.75rem) saturate(180%);box-shadow:0 1.5rem 3rem rgb(21 22 20 / .14)}
+@supports (backdrop-filter:url(#x) blur(1px)){
+  .glass{backdrop-filter:url(#liquid-glass) blur(.625rem) saturate(180%)}
+}
+.glass-rim{box-shadow:inset 0 1px 0 rgb(255 255 255 / .36),0 1.5rem 3rem rgb(21 22 20 / .14)}
+.squircle{border-radius:1.25rem}
+@supports (corner-shape:superellipse(2)){
+  .squircle{corner-shape:superellipse(2);border-radius:1.625rem}
+}
+.lg-filter{position:absolute;width:0;height:0;pointer-events:none}
+
+/* ---------- header ---------- */
+.hdr{position:fixed;left:0;right:0;top:0;z-index:40;background-color:transparent;box-shadow:none;transition:background-color 300ms var(--ease-out-soft),box-shadow 300ms var(--ease-out-soft)}
+.hdr__row{position:relative;display:flex;align-items:center;justify-content:space-between;height:var(--spacing-header);padding-inline:var(--spacing-gutter)}
+.logo{display:flex;align-items:center;gap:.625rem;text-decoration:none;color:var(--color-ink);transition:color 300ms var(--ease-out-soft)}
+.logo:hover{color:var(--color-ink)}
+.logo img{height:1.75rem;width:auto}
+.logo__img--light{display:none}
+.logo__word{font:600 .6875rem/1.25 var(--font-sans);letter-spacing:.22em;text-transform:uppercase}
+.nav{position:relative;display:flex;gap:2.25rem}
+.nav__a{font:500 .9375rem/1.2 var(--font-sans);color:var(--color-ink-muted);text-decoration:none;padding:.5rem 0;transition:color 150ms var(--ease-out-soft)}
+.nav__a:hover,.nav__a.is-active{color:var(--color-ink)}
+/* aktivna stavka: kosi zeleni "shard" iz logotipa klizi ispod stavke */
+.nav__ind{position:absolute;left:0;bottom:-.125rem;height:.1875rem;width:0;background:var(--color-accent);opacity:0;pointer-events:none;transform:skewX(-30deg);transition:transform 520ms var(--ease-bounce),width 520ms var(--ease-bounce),opacity 200ms var(--ease-out-soft)}
+.nav__a.is-active.static-ind{position:relative}
+.nav__a.is-active.static-ind::after{content:"";position:absolute;left:0;right:0;bottom:-.125rem;height:.1875rem;background:var(--color-accent);transform:skewX(-30deg)}
+
+/* ---------- header nad tamnom sekcijom (usluge, kontakt) ---------- */
+.hdr.on-dark .logo,.hdr.on-dark .burger{color:#f3f2ec}
+.hdr.on-dark .logo__img--dark{display:none}
+.hdr.on-dark .logo__img--light{display:block}
+.hdr.on-dark .nav__a{color:rgba(243,242,236,.62)}
+.hdr.on-dark .nav__a:hover,.hdr.on-dark .nav__a.is-active{color:#f3f2ec}
+.hdr.glass.on-dark{background:rgba(21,22,20,.72);background:color-mix(in srgb,#151614 72%,transparent);box-shadow:0 1.5rem 3rem rgb(0 0 0 / .35)}
+
+/* ---------- burger ---------- */
+.burger{display:none;position:relative;width:44px;height:44px;margin-right:-.625rem;padding:0;border:0;background:transparent;color:var(--color-ink);cursor:pointer;place-items:center}
+.burger__box{position:relative;display:block;width:20px;height:20px}
+.burger__box span{position:absolute;left:0;top:9px;width:20px;height:2px;background:currentColor;transition:transform 200ms var(--ease-out-soft),opacity 150ms var(--ease-out-soft)}
+.burger__box span:nth-child(1){transform:translateY(-.375rem)}
+.burger__box span:nth-child(3){transform:translateY(.375rem)}
+.hdr.is-open .burger__box span:nth-child(1){transform:rotate(45deg)}
+.hdr.is-open .burger__box span:nth-child(2){opacity:0}
+.hdr.is-open .burger__box span:nth-child(3){transform:rotate(-45deg)}
+
+/* ---------- mobile menu panel ---------- */
+.menu-panel{position:absolute;right:var(--spacing-gutter);top:calc(100% - 1.25rem);z-index:10;width:min(11rem,calc(100vw - 2 * var(--spacing-gutter)));padding:var(--spacing-xs);transform-origin:top right;display:none;flex-direction:column;
+  visibility:hidden;opacity:0;transform:translateY(-1rem) scale(.86);
+  transition:opacity 180ms var(--ease-out-soft),transform 200ms var(--ease-out-soft),visibility 0s linear 200ms}
+.menu-panel.is-open{visibility:visible;opacity:1;transform:none;
+  transition:opacity 200ms var(--ease-out-soft),transform 420ms var(--ease-bounce),visibility 0s linear}
+.menu-panel__a{display:flex;align-items:center;gap:.5rem;min-height:2.75rem;padding-inline:1rem;font:500 .9375rem/1.2 var(--font-sans);color:var(--color-ink);text-decoration:none;transition:opacity 150ms var(--ease-out-soft)}
+.menu-panel__a:hover{opacity:.7;color:var(--color-ink)}
+.menu-panel__mark{width:.25rem;height:.875rem;background:var(--color-accent);transform:skewX(-30deg) scaleY(0);transform-origin:bottom;margin-left:-.75rem;transition:transform 320ms var(--ease-bounce)}
+.menu-panel__a.is-active .menu-panel__mark{transform:skewX(-30deg) scaleY(1)}
+
+@media (max-width:959px){
+  .hdr .logo__word{display:none}
+  .nav{gap:1.25rem}
+}
+@media (max-width:639px){
+  .nav{display:none}
+  .burger{display:grid}
+  .menu-panel{display:flex}
+  .logo img{height:1.5rem}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:1ms !important;animation-duration:1ms !important}
+}
+
+/* ---------- hero ---------- */
+.hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;padding:calc(var(--spacing-header) + clamp(1rem,3vh,2.5rem)) 0 clamp(1.5rem,4vh,3rem)}
+.hero > .wrap{flex:1;display:flex;flex-direction:column}
+.hero__title{font-size:clamp(2.75rem,min(7.4vw,11.5vh),7.75rem);max-width:1180px;margin-bottom:clamp(1.25rem,4vh,3rem)}
+.hero__title .ln{display:block;overflow:hidden;padding-bottom:.06em}
+.hero__title .ln span{display:inline-block;animation:rise 1.1s var(--ease) both}
+.hero__title .serif{font-size:1.06em;letter-spacing:-.02em}
+.hero__row{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,5fr) minmax(0,4fr);gap:clamp(1rem,2.5vw,2rem);align-items:end;padding-bottom:clamp(1.25rem,4vh,2.5rem)}
+.hero__meta{margin:0;font-size:14px;font-weight:600;color:var(--muted);line-height:1.5}
+.hero__meta b{color:var(--text)}
+.hero__lead{margin:0;font-size:clamp(18px,1.5vw,21px);line-height:1.5;max-width:520px}
+.hero__cta{justify-self:end}
+.hero__media{flex:1 1 auto;min-height:32vh;border-radius:4px}
+.hero__media img{transform-origin:center;will-change:transform}
+.hero__cap{position:absolute;left:20px;bottom:20px;padding:8px 14px;border-radius:999px;background:var(--paper);font-size:13px;font-weight:600}
+.in{animation:up 1s var(--ease) both}
+.dl1{animation-delay:.05s}.dl2{animation-delay:.14s}.dl3{animation-delay:.23s}.dl4{animation-delay:.45s}.dl5{animation-delay:.6s}.dl6{animation-delay:.75s}
+@keyframes rise{from{transform:translateY(105%)}to{transform:none}}
+@keyframes up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+/* ---------- stats ---------- */
+.stats{padding:0 0 clamp(4rem,12vh,8rem)}
+.stats__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--line)}
+.stat{padding:32px 24px 36px 0;display:flex;flex-direction:column;gap:10px}
+.stat + .stat{padding-left:24px;border-left:1px solid var(--line)}
+.stat__num{font:700 clamp(44px,4.4vw,64px)/1 'Archivo',sans-serif;letter-spacing:-.04em}
+.stat__num.serif{font-family:'Instrument Serif',serif;font-weight:400;letter-spacing:-.01em}
+.stat__lbl{font-size:15px;color:var(--muted);font-weight:500;max-width:220px;line-height:1.4}
+
+/* ---------- horizontal pinned ---------- */
+.hs{position:relative;background:var(--ink);color:var(--paper)}
+.hs__sticky{position:sticky;top:0;height:100vh;height:100svh;min-height:32rem;overflow:hidden;display:flex;align-items:center}
+.hs__track{display:flex;align-items:flex-end;gap:40px;width:max-content;padding:0 max(32px,calc((100vw - 1272px) / 2));will-change:transform}
+.hs__intro{width:min(440px,78vw);flex-shrink:0;align-self:center;display:flex;flex-direction:column;gap:28px}
+.hs__intro .kicker{color:rgba(243,242,236,.6);margin:0}
+.hs__intro .kicker b{color:var(--paper)}
+.hs__hint{display:flex;align-items:center;gap:14px;color:rgba(243,242,236,.6);font-size:14px;font-weight:600}
+.hs__meter{width:140px;height:2px;background:rgba(243,242,236,.18);overflow:hidden}
+.hs__bar{display:block;height:100%;width:calc(var(--p,0) * 100%);background:var(--accent)}
+.hcard{flex-shrink:0;width:clamp(300px,calc(58vh * .78),480px);display:flex;flex-direction:column;gap:22px}
+.hcard__img{aspect-ratio:4/5;border-radius:4px;background:#2a2c28}
+.hcard__head{display:flex;align-items:baseline;gap:16px}
+.hcard__num{font:600 14px/1 'Manrope',sans-serif;color:rgba(243,242,236,.55);letter-spacing:.08em}
+.hcard h3{font:700 clamp(26px,2.2vw,34px)/1.05 'Archivo',sans-serif;letter-spacing:-.03em;margin:0}
+.hcard p{margin:0;color:rgba(243,242,236,.72);font-size:16px;line-height:1.55;max-width:420px}
+.hs__end{width:min(420px,78vw);flex-shrink:0;align-self:center;display:flex;flex-direction:column;gap:28px;padding-right:40px}
+.hs__end .h{font-size:clamp(36px,3.6vw,56px)}
+
+/* ---------- programs ---------- */
+.prog{padding:clamp(5rem,14vh,10rem) 0 clamp(2rem,6vh,5rem)}
+.prog__head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;margin-bottom:72px}
+.prog__head p{max-width:380px;color:var(--muted);margin:0}
+.prow{min-height:70vh;min-height:70svh;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:64px;align-items:center;padding:0 0 clamp(4rem,10vh,7.5rem)}
+.prow--rev{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
+.prow--rev .prow__media{order:2}
+.prow__media{aspect-ratio:3/2;border-radius:4px}
+.prow__body{display:flex;flex-direction:column;gap:22px;align-items:flex-start}
+.prow__tag{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-deep)}
+.prow h3{font:700 clamp(36px,3.8vw,58px)/1 'Archivo',sans-serif;letter-spacing:-.04em;margin:0}
+.prow p{margin:0;color:var(--muted);font-size:18px;max-width:460px}
+
+/* ---------- quote ---------- */
+.quote{min-height:100vh;min-height:100svh;display:flex;align-items:center;padding:clamp(5rem,12vh,10rem) 0}
+.quote blockquote{margin:0 auto;max-width:1100px;text-align:center;font-size:clamp(36px,4.8vw,72px);line-height:1.08}
+.quote figcaption{margin-top:32px;text-align:center;font-size:14px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.quote .mark{display:block;width:14px;height:14px;margin:0 auto 40px;background:var(--accent);transform:skewX(-30deg)}
+
+/* ---------- about ---------- */
+.about{min-height:100vh;min-height:100svh;padding:clamp(5rem,14vh,10rem) 0;background:var(--paper2)}
+.about__grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:80px;align-items:start}
+.about__main{position:sticky;top:calc(var(--spacing-header) + 2vh);aspect-ratio:3/4;max-height:calc(100svh - var(--spacing-header) - 6vh);border-radius:4px}
+.about__title{font-size:clamp(56px,8vw,128px);margin-bottom:56px}
+.arow{display:grid;grid-template-columns:56px minmax(0,1fr);gap:20px;padding:32px 0;border-top:1px solid var(--line)}
+.arow__n{font:600 14px/2 'Manrope',sans-serif;color:var(--muted)}
+.arow h3{font:700 clamp(24px,2vw,30px)/1.1 'Archivo',sans-serif;letter-spacing:-.03em;margin:0 0 10px}
+.arow p{margin:0;color:var(--muted);font-size:17px;max-width:520px}
+.about__second{margin-top:56px;aspect-ratio:3/2;border-radius:4px;width:78%;margin-left:auto}
+
+/* ---------- reviews ---------- */
+.rev{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:clamp(5rem,14vh,10rem) 0}
+.rev__head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;margin-bottom:64px}
+.rev__score{display:flex;align-items:center;gap:12px;font-weight:700;font-size:15px}
+.stars{display:flex;gap:3px;color:var(--ink)}
+.stars svg{width:16px;height:16px;fill:currentColor}
+.rev__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid var(--ink)}
+.rcard{padding:36px 36px 8px 0;display:flex;flex-direction:column;gap:24px}
+.rcard + .rcard{padding-left:36px;border-left:1px solid var(--line)}
+.rcard p{margin:0;font-family:'Instrument Serif',serif;font-size:26px;line-height:1.25;letter-spacing:-.005em}
+.rcard__who{display:flex;align-items:center;gap:12px;font-size:15px;margin-top:auto}
+.rcard__who b{font-weight:700}
+.rcard__who span{color:var(--muted)}
+
+/* ---------- gallery ---------- */
+.gal{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:clamp(4rem,10vh,8rem) 0;overflow:hidden}
+.gal__head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:48px}
+.strip{overflow:hidden}
+.strip__track{display:flex;width:max-content;animation:marq 60s linear infinite}
+.strip:hover .strip__track{animation-play-state:paused}
+.strip__item{height:clamp(16rem,52svh,40rem);margin-right:16px;border-radius:4px;flex-shrink:0}
+.strip__item.p{aspect-ratio:2/3}
+.strip__item.l{aspect-ratio:3/2}
+@keyframes marq{to{transform:translateX(-50%)}}
+
+/* ---------- contact ---------- */
+.ct{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;background:var(--ink);color:var(--paper);padding:clamp(5rem,14vh,10rem) 0 0}
+.ct > .ct__grid{flex:1;align-items:center}
+.ct a{color:var(--paper)}
+.ct__grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:72px;align-items:start}
+.ct .kicker{color:rgba(243,242,236,.6)}
+.ct .kicker b{color:var(--paper)}
+.ct__title{font-size:clamp(48px,6.4vw,104px);margin-bottom:40px}
+.ct__title .serif{color:var(--accent)}
+.ct__list{margin-top:64px;border-top:1px solid rgba(243,242,236,.2)}
+.crow{display:grid;grid-template-columns:140px minmax(0,1fr) 24px;gap:20px;align-items:center;padding:24px 0;border-bottom:1px solid rgba(243,242,236,.2);text-decoration:none;transition:padding-left .35s var(--ease)}
+a.crow:hover{padding-left:12px;color:var(--paper)}
+a.crow:hover .ic{color:var(--accent)}
+.crow__lbl{font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(243,242,236,.55)}
+.crow__val{font:600 clamp(18px,1.7vw,24px)/1.3 'Archivo',sans-serif;letter-spacing:-.02em;word-break:break-word}
+.ct__photo{aspect-ratio:3/4;max-height:calc(100svh - var(--spacing-header) - 8vh);border-radius:4px;background:#2a2c28}
+.foot{margin-top:clamp(3rem,10vh,7.5rem);padding:32px 0;border-top:1px solid rgba(243,242,236,.2);font-size:14px;color:rgba(243,242,236,.6)}
+.foot__row{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.foot .logo{margin-right:0;color:var(--paper)}
+.foot__links{display:flex;gap:24px}
+.foot__links a{text-decoration:none;color:rgba(243,242,236,.75)}
+.foot__links a:hover{color:var(--paper)}
+
+/* ---------- popup ---------- */
+.pop{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px;background:rgba(21,22,20,.55);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:fade .45s ease both;overflow-y:auto}
+.pop__card{position:relative;width:100%;max-width:820px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);background:var(--paper);color:var(--ink);border-radius:6px;overflow:hidden;box-shadow:0 40px 120px -30px rgba(0,0,0,.55);animation:popin .7s var(--ease) both}
+.pop__img{min-height:100%;border-radius:0}
+.pop__img img{position:absolute;inset:0}
+.pop__body{padding:52px 48px 44px;display:flex;flex-direction:column;gap:22px}
+.pop__x{position:absolute;top:14px;right:14px;z-index:2;width:44px;height:44px;border-radius:50%;border:0;background:transparent;color:var(--ink);cursor:pointer;display:grid;place-items:center;transition:background-color .25s}
+.pop__x:hover{background:rgba(21,22,20,.07)}
+.pop__kicker{display:flex;align-items:center;gap:10px;margin:0;font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.pop__kicker::before{content:"";width:8px;height:8px;background:var(--accent);transform:skewX(-30deg)}
+.pop__title{font:700 40px/1 'Archivo',sans-serif;letter-spacing:-.035em;margin:0}
+.pop__txt{margin:0;font-size:16px;line-height:1.55;color:var(--muted);max-width:340px}
+.pop__form{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.pop__field{display:flex;flex-direction:column;gap:2px;border-bottom:1px solid rgba(21,22,20,.25);padding:8px 0 6px;transition:border-color .25s}
+.pop__field:focus-within{border-bottom-color:var(--ink)}
+.pop__lbl{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.pop__in{height:36px;padding:0;border:0;background:transparent;color:var(--ink);font:500 17px 'Manrope',sans-serif;outline:none}
+.pop__in::placeholder{color:#9a9c94}
+.pop__form .btn{margin-top:22px}
+.pop__note{margin:0;font-size:13px;color:var(--muted)}
+.pop__ok{display:flex;flex-direction:column;gap:10px;padding:8px 0}
+.pop__ok strong{font:700 28px/1.1 'Archivo',sans-serif;letter-spacing:-.03em}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes popin{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:none}}
+@media (max-width:720px){
+  .pop{padding:16px;align-items:end}
+  .pop__card{grid-template-columns:1fr;max-width:460px;margin:0 auto}
+  .pop__img{height:180px;min-height:0}
+  .pop__body{padding:30px 24px 26px;gap:18px}
+  .pop__title{font-size:30px}
+  .pop__x{background:var(--paper)}
+}
+
+/* ---------- reveal ---------- */
+.rv{transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.site.is-ready .rv{opacity:0;transform:translateY(32px)}
+.site.is-ready .rv.is-in{opacity:1;transform:none}
+.rv-img{transition:clip-path 1.3s var(--ease)}
+.rv-img img{transition:transform 1.6s var(--ease)}
+.site.is-ready .rv-img{clip-path:inset(12% 0 0 0)}
+.site.is-ready .rv-img img{transform:scale(1.12)}
+.site.is-ready .rv-img.is-in{clip-path:inset(0 0 0 0)}
+.site.is-ready .rv-img.is-in img{transform:none}
+.rd1{transition-delay:.1s}.rd2{transition-delay:.2s}
+
+/* ---------- responsive ---------- */
+@media (max-width:1080px){
+  .hero__row{grid-template-columns:1fr;gap:24px;align-items:start}
+  .hero__cta{justify-self:start}
+  .stats__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stat:nth-child(3){padding-left:0;border-left:0}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .prow,.prow--rev{grid-template-columns:1fr;gap:32px;padding-bottom:80px}
+  .prow--rev .prow__media{order:0}
+  .about__grid,.ct__grid{grid-template-columns:1fr;gap:48px}
+  .about__main{position:relative;top:0;max-height:none}
+  .ct__photo{max-height:none}
+  .about__main{aspect-ratio:4/5;max-width:560px}
+  .ct__photo{aspect-ratio:4/3}
+  .rev__grid{grid-template-columns:1fr}
+  .rcard,.rcard + .rcard{padding:32px 0;border-left:0;border-bottom:1px solid var(--line)}
+}
+@media (max-width:640px){
+  .site{font-size:16px}
+  .wrap{padding:0 20px}
+  .foot .logo__word{font-size:10px;letter-spacing:.2em}
+  .hero{padding-top:calc(var(--spacing-header) + 16px)}
+  .hero__title{margin-bottom:32px}
+  .hero__cta{width:100%}
+  .hero__media{min-height:38svh}
+  .stat{padding:24px 12px 24px 0}
+  .stat + .stat{padding-left:12px}
+  .prow,.prow--rev{min-height:0}
+  .prog__head,.rev__head,.gal__head{flex-direction:column;align-items:flex-start}
+  .hs__track{gap:24px;padding:0 20px}
+  .hcard{width:74vw}
+  .about__second{width:100%}
+  .crow{grid-template-columns:1fr 24px;gap:6px 12px}
+  .crow__lbl{grid-column:1 / -1}
+}
+@media (prefers-reduced-motion:reduce){
+  .site.is-ready .rv,.site.is-ready .rv-img{opacity:1;transform:none;clip-path:none;transition:none}
+  .site.is-ready .rv-img img{transform:none}
+  .strip__track,.in,.hero__title .ln span,.pop,.pop__card{animation:none}
+}
+</style>
+</helmet>
+
+<div class="{{rootCls}}" ref="{{setRoot}}">
+
+  <svg class="lg-filter" aria-hidden="true" focusable="false">
+    <filter id="liquid-glass" x="-4%" y="-4%" width="108%" height="108%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.009 0.013" numOctaves="2" seed="11" result="noise"></feTurbulence>
+      <feGaussianBlur in="noise" stdDeviation="6" result="swell"></feGaussianBlur>
+      <feDisplacementMap in="SourceGraphic" in2="swell" scale="9" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
+    </filter>
+  </svg>
+
+  <!-- HEADER -->
+  <header class="hdr {{hdrCls}}" onKeyDown="{{onHdrKey}}">
+    <div class="hdr__row" ref="{{setHdrRow}}">
+      <a class="logo" href="#top" onClick="{{goTop}}">
+        <img class="logo__img--dark" src="/_blob/773c1ad97dde877b9b1844de460dd938" alt="" aria-hidden="true" width="20" height="28">
+        <img class="logo__img--light" src="/_blob/c3babc733e181eea5275b0db508dac0e" alt="" aria-hidden="true" width="20" height="28">
+        <span class="logo__word" aria-hidden="true">Performance<br>Conditioning</span>
+        <span class="sr">Performance Conditioning</span>
+      </a>
+      <nav class="nav" aria-label="Glavna navigacija" ref="{{setNav}}">
+        <sc-for list="{{navItems}}" as="it" hint-placeholder-count="6">
+          <a class="nav__a {{it.cls}}" href="{{it.href}}" data-id="{{it.id}}" aria-current="{{it.current}}" onClick="{{it.go}}">{{it.label}}</a>
+        </sc-for>
+        <span class="nav__ind" aria-hidden="true" ref="{{setInd}}"></span>
+      </nav>
+      <button class="burger" type="button" aria-expanded="{{menuExpanded}}" aria-controls="mobile-menu" aria-label="{{menuLabel}}" onClick="{{toggleMenu}}" ref="{{setBurger}}">
+        <span class="burger__box" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+      <div class="menu-panel glass glass-rim squircle {{panelCls}}" id="mobile-menu" ref="{{setPanel}}">
+        <sc-for list="{{navItems}}" as="it" hint-placeholder-count="6">
+          <a class="menu-panel__a {{it.cls}}" href="{{it.href}}" aria-current="{{it.current}}" onClick="{{it.go}}"><span class="menu-panel__mark" aria-hidden="true"></span>{{it.label}}</a>
+        </sc-for>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <header class="hero" id="top">
+    <div class="wrap">
+      <h1 class="h hero__title">
+        <span class="ln"><span class="dl1">Bolja izvedba,</span></span>
+        <span class="ln"><span class="dl2">manje ozljeda,</span></span>
+        <span class="ln"><span class="serif dl3">struktura treninga.</span></span>
+      </h1>
+      <div class="hero__row">
+        <p class="hero__meta in dl4"><b>Kondicijski trener</b><br>Zagreb · uživo i online</p>
+        <p class="hero__lead in dl5">Poboljšaj svoje sportske performanse i riješi se ozljeda. Rad s djecom sportašima, sportašima i rehabilitacija ozljeda.</p>
+        <a class="btn btn--accent hero__cta in dl6" href="#kontakt">Želim biti bolji sportaš
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+        </a>
+      </div>
+      <figure class="media hero__media in dl5" style="margin: 0;">
+        <img ref="{{setHeroImg}}" src="/_blob/c0a06770913259a5a4b4ff0e08009ea5" alt="Trener s mladim nogometašima na terenu nakon treninga">
+        <figcaption class="hero__cap">Rad na terenu</figcaption>
+      </figure>
+    </div>
+  </header>
+
+  <!-- STATS -->
+  <section class="stats" aria-label="Iskustvo">
+    <div class="wrap">
+      <div class="stats__grid rv" ref="{{setStats}}">
+        <div class="stat">
+          <span class="stat__num serif">Magistar</span>
+          <span class="stat__lbl">kineziologije</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num">{{n100}}+</span>
+          <span class="stat__lbl">sportaša i ambicioznih rekreativaca</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num">{{n5}}+</span>
+          <span class="stat__lbl">godina iskustva</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num">{{n3000}}+</span>
+          <span class="stat__lbl">odrađenih treninga</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HORIZONTAL: KAKO VAM MOGU POMOĆI -->
+  <section class="hs" id="usluge" ref="{{setHs}}">
+    <div class="hs__sticky" ref="{{setSticky}}">
+      <div class="hs__track" ref="{{setTrack}}">
+        <div class="hs__intro">
+          <h2 class="h h2">Kako vam mogu <span class="serif">pomoći?</span></h2>
+          <div class="hs__hint" aria-hidden="true"><span class="hs__meter"><span class="hs__bar"></span></span>Scrollaj dalje</div>
+        </div>
+        <article class="hcard">
+          <div class="media hcard__img"><img src="/_blob/7d008f9102e0445f67890be45900cb7e" alt="Trener vodi vježbu s mladim sportašima" loading="lazy"></div>
+          <div>
+            <div class="hcard__head"><span class="hcard__num">01</span><h3>Djeca sportaši</h3></div>
+            <p style="margin-top: 12px;">Sigurna i strukturirana izgradnja atletskih temelja — snaga, koordinacija i brzina prilagođeni razvojnoj dobi.</p>
+          </div>
+        </article>
+        <article class="hcard">
+          <div class="media hcard__img"><img src="/_blob/874e6d458793f9e447be02550b8c4eb1" alt="Trener s loptom na terenu" loading="lazy"></div>
+          <div>
+            <div class="hcard__head"><span class="hcard__num">02</span><h3>Sportaši</h3></div>
+            <p style="margin-top: 12px;">Poboljšanje sportskih performansi — snaga, eksplozivnost i kondicija prema zahtjevima tvog sporta.</p>
+          </div>
+        </article>
+        <article class="hcard">
+          <div class="media hcard__img"><img src="/_blob/1c83fd00664e11c6b1041b48c5369534" alt="Trener u razgovoru sa sportašem" loading="lazy" style="object-position: 35% center;"></div>
+          <div>
+            <div class="hcard__head"><span class="hcard__num">03</span><h3>Rehabilitacija ozljeda</h3></div>
+            <p style="margin-top: 12px;">Siguran povratak u sport nakon ozljede — jače i otpornije nego prije.</p>
+          </div>
+        </article>
+        <div class="hs__end">
+          <h3 class="h">Želim biti <span class="serif">bolji sportaš.</span></h3>
+          <a class="btn btn--accent" href="#kontakt" style="align-self: flex-start;">Pošalji poruku
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRAMS -->
+  <section class="prog" id="programi">
+    <div class="wrap">
+      <div class="prog__head rv">
+        <div>
+          <h2 class="h h2">Uživo ili <span class="serif">online.</span></h2>
+        </div>
+      </div>
+      <div class="prow">
+        <div class="media prow__media rv-img"><img src="/_blob/8ce45e28f1223babc0401b5a0bb8ae37" alt="Trener s tri sportaša na terenu" loading="lazy"></div>
+        <div class="prow__body rv">
+          <span class="prow__tag">Teretana · teren</span>
+          <h3>Osobni trening</h3>
+          <p>Individualni trening za sportaše, djecu sportaše i rehabilitaciju ozljeda, uživo u teretani ili na terenu.</p>
+          <a class="link" href="#kontakt">Saznaj više <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        </div>
+      </div>
+      <div class="prow prow--rev">
+        <div class="media ph prow__media rv-img" role="img" aria-label="Mjesto za snimku zaslona aplikacije za praćenje treninga">
+          <div class="ph__in">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1.5"></rect><path d="M8 20h8M12 16v4"></path></svg>
+            <span>Snimka zaslona aplikacije za online treninge</span>
+          </div>
+        </div>
+        <div class="prow__body rv">
+          <span class="prow__tag">Online</span>
+          <h3>Online suradnja</h3>
+          <p>Online trening za sportaše, djecu sportaše i rehabilitaciju ozljeda — gradimo sustav koji mijenja vašu sportsku karijeru, poboljšava performanse i smanjuje ozljede.</p>
+          <a class="link" href="#kontakt">Saznaj više <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <section class="quote" aria-label="Citat">
+    <figure class="wrap rv" style="margin: 0 auto;">
+      <span class="mark" aria-hidden="true"></span>
+      <blockquote class="serif">Uz mene ne dobivate formulu za uspjeh preko noći. Niti nerealna i lažna obećanja.</blockquote>
+      <figcaption>Gabrijel · kondicijski trener</figcaption>
+    </figure>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="o-meni">
+    <div class="wrap about__grid">
+      <div class="media about__main rv-img"><img src="/_blob/f80f2fbb9a569a6db3c97ed475e9d1f7" alt="Trener sa sportašem, podignut palac" loading="lazy"></div>
+      <div>
+        <h2 class="h about__title rv">Tko sam <span class="serif">ja?</span></h2>
+        <div class="arow rv">
+          <span class="arow__n">01</span>
+          <div>
+            <h3>Obrazovanje</h3>
+            <p>Magistar sam kineziologije s iskustvom i bogatim znanjem iz kineziologije i sportskog treninga.</p>
+          </div>
+        </div>
+        <div class="arow rv">
+          <span class="arow__n">02</span>
+          <div>
+            <h3>Rad s klijentima</h3>
+            <p>Vjerujem da je svaki klijent jedinstven, pa je tako i moj pristup treningu – prilagođen vašim ciljevima i razini iskustva.</p>
+          </div>
+        </div>
+        <div class="arow rv">
+          <span class="arow__n">03</span>
+          <div>
+            <h3>Rezultati</h3>
+            <p>Neki moji klijenti postignu značajne rezultate već nakon par tjedana. Nekima treba više vremena. Svatko ima svoj tempo.</p>
+          </div>
+        </div>
+        <div class="media about__second rv-img"><img src="/_blob/d22cb1c25412f5cfb5e4e8eb39e68a78" alt="Nasmijani trener na terenu" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="rev" id="recenzije">
+    <div class="wrap">
+      <div class="rev__head rv">
+        <div>
+          <h2 class="h h2">Što kažu <span class="serif">sportaši.</span></h2>
+        </div>
+        <div class="rev__score">
+          <span class="stars" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"></path></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"></path></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"></path></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"></path></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"></path></svg>
+          </span>
+          <span>5/5 na Google recenzijama</span>
+        </div>
+      </div>
+      <div class="rev__grid">
+        <article class="rcard rv">
+          <p>„Radim kod Gabija vec par mjeseci i top je, od kad sam krenuo s njim poboljsala mi se snaga, eksplozivnost, kondicija…"</p>
+          <div class="rcard__who"><b>Petar S.</b><span>Google recenzija</span></div>
+        </article>
+        <article class="rcard rv rd1">
+          <p>„Kondicijska priprema kod trenera Gabrijela je na vrhunskoj razini. Treninzi su stručno vođeni, dobro strukturirani i prilagođeni individualnim potrebama…"</p>
+          <div class="rcard__who"><b>Josip Z.</b><span>Google recenzija</span></div>
+        </article>
+        <article class="rcard rv rd2">
+          <p>„Gabrijel je trener koji je vrlo posvecen poslu koji radi, komunikacija je na top nivou te je individualan pristup takoder odlican."</p>
+          <div class="rcard__who"><b>Luka M.</b><span>Google recenzija</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="gal" id="galerija">
+    <div class="wrap gal__head rv">
+      <div>
+        <h2 class="h h2">S <span class="serif">terena.</span></h2>
+      </div>
+    </div>
+    <div class="strip rv">
+      <div class="strip__track">
+        <sc-for list="{{gallery}}" as="g" hint-placeholder-count="12">
+          <div class="media strip__item {{g.shape}}"><img src="{{g.src}}" alt="{{g.alt}}" loading="lazy"></div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="ct" id="kontakt">
+    <div class="wrap ct__grid">
+      <div>
+        <h2 class="h ct__title rv">Pošaljite mi poruku <span class="serif">već danas.</span></h2>
+        <a class="btn btn--accent rv" href="https://wa.me/385992994492" target="_blank" rel="noopener">
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 12a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.1-4.3A8.5 8.5 0 1 1 20.5 12z"></path></svg>
+          Poruka na WhatsApp
+        </a>
+        <div class="ct__list rv">
+          <a class="crow" href="tel:+385992994492"><span class="crow__lbl">Telefon</span><span class="crow__val">+385 99 299 4492</span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"></path></svg></a>
+          <a class="crow" href="mailto:performanceconditioninghr@gmail.com"><span class="crow__lbl">Email</span><span class="crow__val">performanceconditioninghr@gmail.com</span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"></path></svg></a>
+          <a class="crow" href="https://maps.google.com/?q=Kuzminečka+10A,+Vrbani,+Zagreb" target="_blank" rel="noopener"><span class="crow__lbl">Adresa</span><span class="crow__val">Kuzminečka 10A, Vrbani, Zagreb</span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"></path></svg></a>
+          <a class="crow" href="#kontakt"><span class="crow__lbl">Instagram</span><span class="crow__val">[INSTAGRAM PROFIL]</span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"></path></svg></a>
+          <a class="crow" href="#kontakt"><span class="crow__lbl">TikTok</span><span class="crow__val">[TIKTOK PROFIL]</span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"></path></svg></a>
+        </div>
+      </div>
+      <div class="media ct__photo rv-img"><img src="/_blob/75f52920965c4feac81a0a4b4b8771b8" alt="Trener daje upute na terenu" loading="lazy"></div>
+    </div>
+    <footer class="foot">
+      <div class="wrap foot__row">
+        <a class="logo" href="#top">
+          <img src="/_blob/c3babc733e181eea5275b0db508dac0e" alt="" width="20" height="28" style="height: 1.75rem;">
+          <span class="logo__word">Performance<br>Conditioning</span>
+        </a>
+        <div class="foot__links">
+          <a href="#usluge">Usluge</a>
+          <a href="#o-meni">O meni</a>
+          <a href="#kontakt">Kontakt</a>
+        </div>
+        <span>© 2026 Performance Conditioning</span>
+      </div>
+    </footer>
+  </section>
+
+
+  <!-- POPUP -->
+  <sc-if value="{{popupOpen}}" hint-placeholder-val="{{ false }}">
+    <div class="pop" onClick="{{closePopup}}">
+      <div class="pop__card" role="dialog" aria-modal="true" aria-labelledby="pop-title" onClick="{{stop}}">
+        <button class="pop__x" type="button" aria-label="Zatvori" onClick="{{closePopup}}">
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+        </button>
+        <div class="media pop__img"><img src="/_blob/7d008f9102e0445f67890be45900cb7e" alt="Trener vodi trening s mladim sportašima" style="object-position: 60% center;"></div>
+        <div class="pop__body">
+          <p class="pop__kicker">Samo za pretplatnike</p>
+          <h2 class="pop__title" id="pop-title">Postani <span class="serif">bolji sportaš.</span></h2>
+          <sc-if value="{{notSubscribed}}" hint-placeholder-val="{{ true }}">
+            <p class="pop__txt">Ekskluzivni savjeti na email — i mali poklon za dobrodošlicu.</p>
+            <form class="pop__form" onSubmit="{{subscribe}}">
+              <label class="pop__field" for="pop-name"><span class="pop__lbl">Ime</span><input class="pop__in" id="pop-name" type="text" name="name" placeholder="Tvoje ime" autocomplete="given-name"></label>
+              <label class="pop__field" for="pop-email"><span class="pop__lbl">Email</span><input class="pop__in" id="pop-email" type="email" name="email" placeholder="ime@email.com" required autocomplete="email"></label>
+              <button class="btn btn--ink btn--block" type="submit">Pošalji mi savjete
+                <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+              </button>
+            </form>
+            <p class="pop__note">Bez spama. Odjava jednim klikom.</p>
+          </sc-if>
+          <sc-if value="{{subscribed}}" hint-placeholder-val="{{ false }}">
+            <div class="pop__ok">
+              <strong>Hvala!</strong>
+              <p class="pop__txt">Poklon stiže na tvoj email.</p>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"popupDelay":{"editor":"int","default":4,"min":1,"max":30,"unit":"s","section":"Popup"},"showPopup":{"editor":"boolean","default":false,"section":"Popup"},"$preview":{"width":1440,"height":8400}}'>
+class Component extends DCLogic {
+  state = { ready: false, glass: false, onDark: false, menu: false, active: null, popup: false, popupDismissed: false, subscribed: false, count: 0 };
+
+  sections = ['usluge', 'programi', 'o-meni', 'recenzije', 'galerija', 'kontakt'];
+  labels = { 'usluge': 'usluge', 'programi': 'programi', 'o-meni': 'o meni', 'recenzije': 'recenzije', 'galerija': 'galerija', 'kontakt': 'kontakt' };
+  navGo = {};
+
+  setRoot = (el) => { this.root = el; };
+  setHs = (el) => { this.hs = el; };
+  setSticky = (el) => { this.sticky = el; };
+  setTrack = (el) => { this.track = el; };
+  setStats = (el) => { this.statsEl = el; };
+  setHeroImg = (el) => { this.heroImg = el; };
+  setNav = (el) => { this.navEl = el; };
+  setInd = (el) => { this.ind = el; };
+  setBurger = (el) => { this.burger = el; };
+  setPanel = (el) => { this.panel = el; };
+  setHdrRow = (el) => { this.hdrRow = el; };
+
+  toggleMenu = () => { this.setState({ menu: !this.state.menu }); };
+  onHdrKey = (e) => {
+    if (e && e.key === 'Escape' && this.state.menu) {
+      e.stopPropagation();
+      this.setState({ menu: false });
+      if (this.burger) this.burger.focus();
+    }
+  };
+  goTop = (e) => { this.goTo('top', e); };
+  closePopup = () => { this.setState({ popup: false, popupDismissed: true }); };
+  stop = (e) => { if (e) e.stopPropagation(); };
+  subscribe = (e) => { if (e) e.preventDefault(); this.setState({ subscribed: true }); };
+
+  goTo(id, e) {
+    if (e) e.preventDefault();
+    const t = this.root && this.root.querySelector('#' + id);
+    if (t) t.scrollIntoView({ behavior: this.reduced ? 'auto' : 'smooth', block: 'start' });
+    try { if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id); } catch (err) {}
+    if (this.state.menu) this.setState({ menu: false });
+  }
+
+  componentDidMount() {
+    this.reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    this.dist = 0;
+    this._onScroll = () => {
+      if (this._raf) return;
+      this._raf = requestAnimationFrame(() => { this._raf = 0; this.onScroll(); });
+    };
+    this._onResize = () => { this.measure(); this.onScroll(); this.placeInd(true); };
+    this._onPointer = (e) => {
+      if (!this.state.menu) return;
+      const t = e.target;
+      if (this.panel && this.panel.contains(t)) return;
+      if (this.burger && this.burger.contains(t)) return;
+      this.setState({ menu: false });
+    };
+    document.addEventListener('scroll', this._onScroll, { capture: true, passive: true });
+    window.addEventListener('resize', this._onResize);
+    document.addEventListener('pointerdown', this._onPointer, true);
+    if (window.matchMedia) {
+      this._mq = window.matchMedia('(min-width: 40rem)');
+      this._onMq = (ev) => { if (ev.matches && this.state.menu) this.setState({ menu: false }); };
+      if (this._mq.addEventListener) this._mq.addEventListener('change', this._onMq); else this._mq.addListener(this._onMq);
+    }
+    this.syncPanel();
+    this._boot = setTimeout(() => { this.setupReveal(); this.measure(); this.onScroll(); this.placeInd(true); }, 80);
+    this._boot2 = setTimeout(() => { this.measure(); this.onScroll(); this.placeInd(true); }, 1500);
+    const delay = Math.max(1, Number(this.props.popupDelay ?? 4)) * 1000;
+    this._popT = setTimeout(() => { if (!this.state.popupDismissed) this.setState({ popup: true }); }, delay);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevState || prevState.menu !== this.state.menu) this.syncPanel();
+    if (!prevState || prevState.active !== this.state.active) this.placeInd(false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('scroll', this._onScroll, { capture: true });
+    window.removeEventListener('resize', this._onResize);
+    document.removeEventListener('pointerdown', this._onPointer, true);
+    if (this._mq) { if (this._mq.removeEventListener) this._mq.removeEventListener('change', this._onMq); else this._mq.removeListener(this._onMq); }
+    clearTimeout(this._boot); clearTimeout(this._boot2); clearTimeout(this._popT);
+    if (this._raf) cancelAnimationFrame(this._raf);
+    if (this._countRaf) cancelAnimationFrame(this._countRaf);
+    if (this.io) this.io.disconnect();
+  }
+
+  syncPanel() {
+    if (!this.panel) return;
+    if (this.state.menu) this.panel.removeAttribute('inert'); else this.panel.setAttribute('inert', '');
+  }
+
+  placeInd(instant) {
+    if (!this.navEl || !this.ind) return;
+    const id = this.state.active;
+    const a = id ? this.navEl.querySelector('a[data-id="' + id + '"]') : null;
+    if (!a) { this.ind.style.opacity = '0'; this._indShown = false; return; }
+    const apply = () => {
+      this.ind.style.width = a.offsetWidth + 'px';
+      this.ind.style.transform = 'translateX(' + a.offsetLeft + 'px) skewX(-30deg)';
+    };
+    if (instant || !this._indShown) {
+      const prev = this.ind.style.transition;
+      this.ind.style.transition = 'opacity 200ms cubic-bezier(.22,.61,.36,1)';
+      apply();
+      void this.ind.offsetWidth;
+      this.ind.style.transition = prev;
+    } else {
+      apply();
+    }
+    this.ind.style.opacity = '1';
+    this._indShown = true;
+  }
+
+  setupReveal() {
+    if (!this.root) return;
+    const els = Array.prototype.slice.call(this.root.querySelectorAll('.rv, .rv-img'));
+    if (this.reduced || !('IntersectionObserver' in window)) {
+      els.forEach((el) => el.classList.add('is-in'));
+      this.setState({ count: 1 });
+      return;
+    }
+    this.io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('is-in');
+        this.io.unobserve(en.target);
+        if (en.target === this.statsEl) this.runCount();
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    els.forEach((el) => this.io.observe(el));
+    this.setState({ ready: true });
+  }
+
+  runCount() {
+    const start = performance.now();
+    const dur = 1600;
+    const tick = (now) => {
+      const t = Math.min(1, (now - start) / dur);
+      this.setState({ count: 1 - Math.pow(1 - t, 3) });
+      if (t < 1) this._countRaf = requestAnimationFrame(tick);
+    };
+    this._countRaf = requestAnimationFrame(tick);
+  }
+
+  measure() {
+    if (!this.hs || !this.track || !this.sticky) return;
+    this.dist = Math.max(0, this.track.scrollWidth - this.sticky.clientWidth);
+    this.hs.style.height = (this.sticky.offsetHeight + this.dist) + 'px';
+  }
+
+  onScroll() {
+    const vh = window.innerHeight || 800;
+    if (this.hs && this.track && this.sticky) {
+      const r = this.hs.getBoundingClientRect();
+      const total = r.height - this.sticky.offsetHeight;
+      const p = total > 0 ? Math.min(1, Math.max(0, -r.top / total)) : 0;
+      this.track.style.transform = 'translate3d(' + (-p * this.dist).toFixed(1) + 'px,0,0)';
+      this.hs.style.setProperty('--p', p.toFixed(4));
+    }
+    if (this.heroImg && !this.reduced) {
+      const hr = this.heroImg.parentNode.getBoundingClientRect();
+      const hp = Math.min(1, Math.max(0, (vh - hr.top) / (vh + hr.height)));
+      this.heroImg.style.transform = 'scale(' + (1.12 - hp * 0.12).toFixed(4) + ')';
+    }
+    if (!this.root) return;
+    const rr = this.root.getBoundingClientRect();
+    const y = -rr.top;
+    const glass = y > vh * 0.6;
+    // je li ispod headera tamna sekcija (usluge / kontakt)?
+    const probe = (this.hdrRow ? this.hdrRow.offsetHeight : 96) / 2;
+    let onDark = false;
+    const darkEls = this.root.querySelectorAll('.hs, .ct');
+    for (let i = 0; i < darkEls.length; i++) {
+      const dr = darkEls[i].getBoundingClientRect();
+      if (dr.top <= probe && dr.bottom > probe) { onDark = true; break; }
+    }
+    // scroll spy: pojas ispod headera (96px) do 60% visine ekrana — kao rootMargin -96px 0px -40% 0px
+    const bandTop = 96, bandBottom = vh * 0.6;
+    let best = null, bestH = 0;
+    for (let i = 0; i < this.sections.length; i++) {
+      const el = this.root.querySelector('#' + this.sections[i]);
+      if (!el) continue;
+      const r = el.getBoundingClientRect();
+      const h = Math.min(r.bottom, bandBottom) - Math.max(r.top, bandTop);
+      if (h > bestH) { bestH = h; best = this.sections[i]; }
+    }
+    if (glass !== this.state.glass || onDark !== this.state.onDark || best !== this.state.active) {
+      this.setState({ glass, onDark, active: best });
+    }
+  }
+
+  renderVals() {
+    const c = this.state.count || 0;
+    const g = [
+      { src: '/_blob/23d4b0e686103a6dae61424d18793a1f', shape: 'p', alt: 'Trener i sportaš hodaju terenom' },
+      { src: '/_blob/c0a06770913259a5a4b4ff0e08009ea5', shape: 'l', alt: 'Trener s tri nogometaša' },
+      { src: '/_blob/75f52920965c4feac81a0a4b4b8771b8', shape: 'p', alt: 'Trener daje upute' },
+      { src: '/_blob/d22cb1c25412f5cfb5e4e8eb39e68a78', shape: 'l', alt: 'Nasmijani trener' },
+      { src: '/_blob/874e6d458793f9e447be02550b8c4eb1', shape: 'p', alt: 'Trener s loptom' },
+      { src: '/_blob/1c83fd00664e11c6b1041b48c5369534', shape: 'l', alt: 'Razgovor sa sportašem' }
+    ];
+    const active = this.state.active;
+    const navItems = this.sections.map((id) => {
+      if (!this.navGo[id]) this.navGo[id] = (e) => this.goTo(id, e);
+      return { id: id, href: '#' + id, label: this.labels[id], cls: active === id ? 'is-active' : '', current: active === id ? 'true' : 'false', go: this.navGo[id] };
+    });
+    const menu = this.state.menu;
+    const popupOpen = !this.state.popupDismissed && (this.state.popup || this.props.showPopup === true);
+    return {
+      rootCls: this.state.ready ? 'site is-ready' : 'site',
+      hdrCls: (this.state.glass && !menu ? 'glass' : '') + (this.state.onDark ? ' on-dark' : '') + (menu ? ' is-open' : ''),
+      panelCls: menu ? 'is-open' : '',
+      menuExpanded: menu ? 'true' : 'false',
+      menuLabel: menu ? 'Zatvori izbornik' : 'Otvori izbornik',
+      navItems: navItems,
+      setRoot: this.setRoot, setHs: this.setHs, setSticky: this.setSticky, setTrack: this.setTrack, setStats: this.setStats, setHeroImg: this.setHeroImg,
+      setNav: this.setNav, setInd: this.setInd, setBurger: this.setBurger, setPanel: this.setPanel, setHdrRow: this.setHdrRow,
+      toggleMenu: this.toggleMenu, onHdrKey: this.onHdrKey, goTop: this.goTop,
+      n100: Math.round(100 * c), n5: Math.round(5 * c), n3000: Math.round(3000 * c),
+      gallery: g.concat(g),
+      popupOpen: popupOpen, closePopup: this.closePopup, stop: this.stop,
+      subscribe: this.subscribe, subscribed: this.state.subscribed, notSubscribed: !this.state.subscribed
+    };
+  }
+}
+</script>
+</body>
+</html>
