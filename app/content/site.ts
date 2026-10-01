@@ -1,8 +1,10 @@
+import googleJson from "./google-reviews.json";
 import { photos } from "./photos";
 import type {
   AboutPoint,
   ContactLink,
   GalleryItem,
+  GoogleReviews,
   NavItem,
   Program,
   Review,
@@ -78,8 +80,9 @@ export const about: AboutPoint[] = [
   },
 ];
 
-// TODO: pravi Google Reviews widget ili ručno ažurirane recenzije
-export const reviews: Review[] = [
+// Ručno odabrane recenzije. Svježe s Googlea (scripts/fetch-google-reviews.mjs)
+// idu ispred njih; ista osoba se ne prikazuje dvaput.
+const pinnedReviews: Review[] = [
   {
     quote: "Radim kod Gabija vec par mjeseci i top je, od kad sam krenuo s njim poboljsala mi se snaga, eksplozivnost, kondicija…",
     author: "Petar S.",
@@ -96,6 +99,18 @@ export const reviews: Review[] = [
     source: "Google recenzija",
   },
 ];
+
+const google: GoogleReviews = googleJson;
+
+export const reviews: Review[] = [...google.reviews, ...pinnedReviews].filter(
+  (r, i, all) => all.findIndex((o) => o.author === r.author) === i,
+);
+
+export const reviewScore = {
+  rating: google.rating ?? 5,
+  count: google.count,
+  url: google.url,
+};
 
 export const gallery: GalleryItem[] = [
   { ...photos.walkTwo, shape: "portrait" },
@@ -123,8 +138,12 @@ export const contact = {
       href: "https://maps.google.com/?q=Kuzminečka+10A,+Vrbani,+Zagreb",
       external: true,
     },
-    // TODO: pravi profili
-    { group: "social", label: "Instagram", value: "[INSTAGRAM PROFIL]", href: "#kontakt" },
-    { group: "social", label: "TikTok", value: "[TIKTOK PROFIL]", href: "#kontakt" },
+    {
+      group: "social",
+      label: "Instagram",
+      value: "@performanceconditioning.hr",
+      href: "https://www.instagram.com/performanceconditioning.hr/",
+      external: true,
+    },
   ] satisfies ContactLink[],
 };

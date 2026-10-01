@@ -13,6 +13,20 @@
     min-height: 32rem;
     padding-top: var(--header-h); // kartice se centriraju u prostoru ispod headera
     overflow: hidden;
+
+    // Kartice se na rubovima ekrana utapaju u pozadinu umjesto da budu odrezane.
+    // Lijevi rub se zatamni tek kad skrol krene (naslov na početku ostaje čist),
+    // desni nestaje na kraju, kad više nema sadržaja iza ruba.
+    --fade: clamp(40px, 9vw, 160px);
+    --fade-l: calc(var(--fade) * min(1, var(--p, 0) * 12));
+    --fade-r: calc(var(--fade) * min(1, (1 - var(--p, 0)) * 12));
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 var(--fade-l),
+      #000 calc(100% - var(--fade-r)),
+      transparent
+    );
   }
 
   &__track {

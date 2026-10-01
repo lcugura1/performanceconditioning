@@ -149,3 +149,6 @@ vite.config.ts.timestamp-*
 # Originalne fotke (RAW, 3–8 MB) — ne idu u repo
 /design/originals/
 *.zip
+
+# macOS
+.DS_Store

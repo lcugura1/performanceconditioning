@@ -41,6 +41,14 @@ export type Review = {
   source: string;
 };
 
+/** Ono što scripts/fetch-google-reviews.mjs zapisuje u google-reviews.json. */
+export type GoogleReviews = {
+  rating: number | null;
+  count: number | null;
+  url: string | null;
+  reviews: Review[];
+};
+
 export type GalleryItem = Photo & {
   shape: "portrait" | "landscape";
 };

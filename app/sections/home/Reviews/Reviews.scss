@@ -1,5 +1,10 @@
 .rev {
   @include screen-section;
+  --rev-interval: 3s; // mora odgovarati INTERVAL u Reviews.tsx
+
+  &--rotates {
+    cursor: pointer;
+  }
 
   &__title {
     margin-bottom: clamp(1.5rem, 5vh, 3.5rem);
@@ -64,12 +69,89 @@
   }
 
   // ---------- sve recenzije kao jedan odlomak ----------
-  &__flow {
+  &__main {
     align-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.25rem, 3vh, 2rem);
+  }
+
+  // sve stranice u istoj ćeliji: visina = najduža stranica, nema skakanja
+  &__pages {
+    display: grid;
+  }
+
+  &__flow {
+    grid-area: 1 / 1;
     font-family: var(--font-serif);
     font-size: clamp(24px, min(2.5vw, 4.4vh), 42px);
     line-height: 1.28;
     letter-spacing: -0.005em;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.5s ease,
+      visibility 0s linear 0.5s;
+
+    &.is-active {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.5s ease 0.15s;
+    }
+  }
+
+  // ---------- točke + pauza ----------
+  &__ctrl {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  &__dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  &__dot {
+    position: relative;
+    width: 22px;
+    height: 3px;
+    overflow: hidden;
+    background: var(--line);
+
+    &.is-active {
+      background: var(--ink);
+    }
+
+    // traka napretka do sljedeće stranice
+    i {
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      transform-origin: left;
+      animation: rev-progress var(--rev-interval) linear both;
+    }
+  }
+
+  &__toggle {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: 600 13px/1 var(--font-sans);
+    color: var(--muted);
+    cursor: pointer;
+
+    &:hover,
+    &[aria-pressed="true"] {
+      color: var(--ink);
+    }
+  }
+
+  @include reduced-motion {
+    &__flow,
+    &__flow.is-active {
+      transition: none;
+    }
   }
 
   &__item {
@@ -114,6 +196,15 @@
       transform: skewX(-30deg);
       vertical-align: middle;
     }
+  }
+}
+
+@keyframes rev-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
   }
 }
 

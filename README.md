@@ -50,12 +50,12 @@ design/
 
 - **Hosting:** Cloudflare Pages, a postojeća domena se DNS-om preusmjerava s WordPress hostinga.
 - **Fotke s Google Drivea:** povlače se pri buildu (skripta u `scripts/`), a ne u pregledniku. Drive nije CDN: hotlinkovi su spori, imaju limite i mogu puknuti. Skripta skida fotke, generira AVIF/WebP u više veličina i ispisuje `app/content/photos.ts`.
+- **Google recenzije:** `npm run build` prvo pokreće `scripts/fetch-google-reviews.mjs`, koja preko Places API-ja zapisuje ocjenu i recenzije u `app/content/google-reviews.json`. Google daje najviše 5 najnovijih/najrelevantnijih; ručno odabrane u `site.ts` se prikazuju uz njih. Nove recenzije se pojave s idućim buildom.
 - **Blog iz Word dokumenata:** klijent sprema `.docx` u Drive mapu, a build ga pretvara u HTML (npr. `mammoth`) i prerenderira `/blog/:slug`. Novi build se pokreće po rasporedu ili deploy hookom.
 
 ## Otvoreno
 
-- Instagram i TikTok linkovi (`app/content/site.ts`)
 - Snimka zaslona aplikacije za karticu „Online suradnja”
 - Spajanje newsletter forme (Brevo / MailerLite / Mailchimp)
-- Recenzije: Google widget ili ručno ažuriranje
+- Google recenzije: postaviti `GOOGLE_PLACES_API_KEY` i `GOOGLE_PLACE_ID` na Cloudflare Pagesu te dnevni rebuild (deploy hook + cron)
 - Favicon, Open Graph slika (1200×630)
