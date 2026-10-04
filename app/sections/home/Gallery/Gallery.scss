@@ -1,5 +1,5 @@
 .gal {
-  padding: clamp(5rem, 12vh, 8rem) 0 clamp(4rem, 10vh, 6rem);
+  padding: clamp(3rem, 8vh, 5rem) 0 clamp(2.5rem, 6vh, 4rem);
   overflow: hidden;
 
   &__head {
@@ -11,6 +11,7 @@
 
     .disp {
       font-size: clamp(3rem, 8.5vw, 8rem);
+      word-spacing: 0.12em; // kao "Za koga je trening?"
     }
 
     @include below(phone) {

@@ -3,12 +3,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "react-router dev",
+    "dev": "npm run media && react-router dev",
     "reviews": "node --env-file-if-exists=.env scripts/fetch-google-reviews.mjs",
-    "prebuild": "npm run reviews",
+    "check:drive": "node --env-file-if-exists=.env scripts/check-drive.mjs",
+    "prebuild": "npm run reviews && npm run media",
     "build": "react-router build",
     "preview": "vite preview --outDir build/client",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "npm run media && react-router typegen && tsc",
+    "sync": "node --env-file-if-exists=.env scripts/sync-drive.mjs",
+    "media": "node --env-file-if-exists=.env scripts/fetch-media.mjs"
   },
   "engines": {
     "node": ">=22.9"
@@ -26,6 +29,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "sass-embedded": "^1.105.0",
+    "sharp": "^0.35.5",
     "typescript": "^5.9.3",
     "vite": "^8.3.1"
   }

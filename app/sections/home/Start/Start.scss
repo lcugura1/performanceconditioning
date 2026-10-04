@@ -1,5 +1,5 @@
 .start {
-  padding: clamp(5rem, 14vh, 9rem) 0 clamp(4rem, 10vh, 7rem);
+  padding: clamp(3rem, 8vh, 5.5rem) 0 clamp(2.5rem, 6vh, 4.5rem);
   @include fits-screen;
 
   &__head {
@@ -8,6 +8,8 @@
 
     .disp {
       font-size: clamp(3.25rem, min(10vw, 10svh), 9rem);
+      // uski .disp razmak slova stisne i razmake između riječi
+      word-spacing: 0.12em;
     }
 
     p {

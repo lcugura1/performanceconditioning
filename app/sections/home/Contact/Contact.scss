@@ -2,7 +2,7 @@
 .ct {
   position: relative;
   isolation: isolate;
-  padding: clamp(3rem, 8vh, 6rem) clamp(1rem, 3vw, 2.5rem);
+  padding: clamp(2rem, 5vh, 4rem) clamp(1rem, 3vw, 2.5rem);
   overflow: hidden;
   @include fits-screen;
 
@@ -111,10 +111,22 @@
       color: #dcdcda;
     }
 
+    // polja preko fotke: svjetlije oznake, placeholder i crta
+    .ufield {
+      border-color: on-dark(0.45);
+
+      span {
+        color: #c9c9c7;
+      }
+
+      input::placeholder {
+        color: #9a9a98;
+      }
+    }
+
     .pill {
-      justify-content: space-between;
+      align-self: center;
       margin-top: clamp(0.25rem, 1svh, 1rem);
-      padding-right: 1.4rem;
     }
   }
 

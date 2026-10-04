@@ -1,9 +1,36 @@
 import type { Photo } from "./types";
+import manifest from "./media.json";
 
-// Jedno mjesto za sve fotke. Kad uvedemo sync s Google Drivea,
-// ovu datoteku generira skripta (scripts/), a komponente se ne mijenjaju.
-// Izvor: design/originals/2026-10-03 (snimanje @capturedwell, broj u komentaru).
-export const photos = {
+// Jedno mjesto za sve fotke. Fotke dolaze s Google Drivea (npm run sync → media.json,
+// docs/postavljanje.md); fotke ispod su rezerva iz public/images dok slot na Driveu
+// nema fotku. position i sizes ovise o mjestu na stranici, pa ostaju ovdje.
+// Izvor rezerve: design/originals/2026-10-03 (snimanje @capturedwell, broj u komentaru).
+
+type MediaEntry = { id: string; kind: string; width: number; height: number; widths: number[]; alt: string };
+type Manifest = { base: string; pages: Record<string, MediaEntry | undefined>; gallery: MediaEntry[] };
+const media = manifest as Manifest;
+
+/** Ugrađena širina na stranici, po vrsti mjesta. */
+const SIZES = {
+  full: "100vw",
+  half: "(min-width: 900px) 50vw, 100vw",
+  third: "(min-width: 900px) 33vw, 100vw",
+  strip: "(min-width: 900px) 30vw, 70vw",
+};
+
+/** Unos iz manifesta → Photo: jpg kao src, WebP širine u srcSet. */
+function fromMedia(entry: MediaEntry, sizes: string): Photo {
+  const url = (w: number, ext: string) => `${media.base}/${entry.kind}/${entry.id}/${w}.${ext}`;
+  const jpg = entry.widths.filter((w) => w <= 1600).at(-1) ?? entry.widths[0]!;
+  return {
+    src: url(jpg, "jpg"),
+    srcSet: entry.widths.map((w) => `${url(w, "webp")} ${w}w`).join(", "),
+    sizes,
+    alt: entry.alt,
+  };
+}
+
+const fallback = {
   heroGym: {
     src: "/images/hero-gym.jpg",
     alt: "Trener Gabrijel u teretani, prekriženih ruku",
@@ -17,7 +44,7 @@ export const photos = {
   programOnline: {
     src: "/images/program-online.jpg",
     alt: "Trener radi online plan treninga za laptopom",
-    position: "center 45%",
+    position: "20% center",
   }, // 40
   cardDjeca: {
     src: "/images/card-djeca.jpg",
@@ -79,3 +106,45 @@ export const photos = {
   gallery7: { src: "/images/gallery-07.jpg", alt: "Trener na vanjskom terenu" }, // 77
   gallery8: { src: "/images/gallery-08.jpg", alt: "Trener radi plan treninga za računalom" }, // 44
 } satisfies Record<string, Photo>;
+
+type Slot = Exclude<keyof typeof fallback, `gallery${number}`>;
+
+const slotSizes: Record<Slot, string> = {
+  heroGym: SIZES.full,
+  programGym: SIZES.half,
+  programOnline: SIZES.half,
+  cardDjeca: SIZES.third,
+  cardSportasi: SIZES.third,
+  cardRehab: SIZES.third,
+  svcDjeca: SIZES.half,
+  svcSportasi: SIZES.half,
+  svcRehab: SIZES.half,
+  videoDjeca: SIZES.half,
+  videoSportasi: SIZES.half,
+  videoRehab: SIZES.half,
+  about: SIZES.half,
+  contact: SIZES.full,
+};
+
+/** Fotka s Drivea ako slot ima fotku, inače rezerva; position ostaje od rezerve. */
+export const photos = Object.fromEntries(
+  (Object.keys(slotSizes) as Slot[]).map((slot) => {
+    const entry = media.pages[slot];
+    const base: Photo = fallback[slot];
+    return [slot, entry ? { ...fromMedia(entry, slotSizes[slot]), position: base.position } : base];
+  }),
+) as Record<Slot, Photo>;
+
+/** Galerija s Drivea, redom kako ju je sync složio; bez nje rezervnih 8. */
+export const galleryPhotos: (Photo & { landscape: boolean })[] = media.gallery.length
+  ? media.gallery.map((e) => ({ ...fromMedia(e, SIZES.strip), landscape: e.width >= e.height }))
+  : [
+      fallback.gallery1,
+      fallback.gallery2,
+      fallback.gallery3,
+      fallback.gallery4,
+      fallback.gallery5,
+      fallback.gallery6,
+      fallback.gallery7,
+      fallback.gallery8,
+    ].map((p, i) => ({ ...p, landscape: i % 2 === 1 }));

@@ -12,7 +12,7 @@ export function BlogCard({ audience }: { audience: Audience }) {
     <article className="blogc">
       <span className="label">Blog</span>
       <span className="blogc__meta">
-        PDF · {post.minutes} min čitanja · {formatDate(post.date)}
+        PDF · {formatDate(post.date)}
       </span>
       <h4>{post.title}</h4>
       <p>{post.excerpt}</p>
@@ -27,7 +27,7 @@ export function BlogCard({ audience }: { audience: Audience }) {
         )}
         <a className="ulink" href="#blog" onClick={(e) => scrollToSection("blog") && e.preventDefault()}>
           Svi članci
-          <Icon name="arrowUpRight" />
+          <Icon name="arrowDown" />
         </a>
       </div>
     </article>

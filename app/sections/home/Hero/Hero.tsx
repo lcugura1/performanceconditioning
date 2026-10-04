@@ -17,6 +17,8 @@ export function Hero() {
         <img
           className="bw"
           src={photo.src}
+          srcSet={photo.srcSet}
+          sizes={photo.sizes}
           alt={photo.alt}
           style={{ objectPosition: photo.position }}
           fetchPriority="high"
@@ -50,8 +52,10 @@ export function Hero() {
                   <Icon name="arrowDownRight" />
                 </span>
               </a>
-              <a className="pill pill--line" href="#za-koga">
+              {/* na mobitelu izgleda kao podcrtani link (Hero.scss) */}
+              <a className="pill pill--line hero__more" href="#za-koga">
                 {hero.secondary}
+                <Icon name="arrowDownRight" />
               </a>
             </div>
           </div>

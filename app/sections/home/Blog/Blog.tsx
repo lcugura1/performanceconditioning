@@ -68,7 +68,7 @@ function Row({ post, index }: { post: Post; index: number }) {
         <span className="tag">{shortOf(post.audience)}</span>
       </span>
       <span className="post__m post__date">
-        {formatDate(post.date)} · {post.minutes} min
+        {formatDate(post.date)}
       </span>
       <span className="post__m post__go">{post.pdf ? <Icon name="arrowUpRight" /> : "Uskoro"}</span>
     </>

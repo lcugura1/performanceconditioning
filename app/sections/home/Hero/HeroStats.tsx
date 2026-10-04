@@ -14,7 +14,16 @@ export function HeroStats() {
       {stats.map((s) => (
         <div className="gstat" key={s.label}>
           {/* dt mora biti prije dd; broj se vizualno diže iznad oznake (order u Hero.scss) */}
-          <dt className="gstat__l">{s.label}</dt>
+          <dt className="gstat__l">
+            {s.short ? (
+              <>
+                <span className="gstat__full">{s.label}</span>
+                <span className="gstat__short">{s.short}</span>
+              </>
+            ) : (
+              s.label
+            )}
+          </dt>
           <dd className={cx("gstat__n", s.kind === "text" && "gstat__n--sm")}>
             {s.kind === "text" ? s.value : `${Math.round(s.value * progress)}+`}
           </dd>

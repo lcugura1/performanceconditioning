@@ -3,6 +3,10 @@ export type Photo = {
   alt: string;
   /** CSS object-position kad fokus fotke nije u sredini */
   position?: string;
+  /** WebP širine s Drivea (npm run sync); bez njih se koristi samo src */
+  srcSet?: string;
+  /** koliko je fotka široka na stranici, da preglednik odabere širinu iz srcSet */
+  sizes?: string;
 };
 
 export type NavItem = {
@@ -62,9 +66,10 @@ export type Program = {
   placeholder?: string;
 };
 
+/** short: kraća oznaka za mobitel, gdje su sve četiri brojke u jednom retku */
 export type Stat =
-  | { kind: "text"; value: string; label: string }
-  | { kind: "count"; value: number; label: string };
+  | { kind: "text"; value: string; label: string; short?: string }
+  | { kind: "count"; value: number; label: string; short?: string };
 
 export type AboutPoint = {
   title: string;

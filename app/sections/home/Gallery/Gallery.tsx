@@ -17,6 +17,8 @@ export function Gallery() {
             <div className={`strip__item strip__item--${photo.shape}`} key={i} aria-hidden={i >= gallery.length}>
               <img
                 src={photo.src}
+                srcSet={photo.srcSet}
+                sizes={photo.sizes}
                 alt={i < gallery.length ? photo.alt : ""}
                 loading="lazy"
                 decoding="async"

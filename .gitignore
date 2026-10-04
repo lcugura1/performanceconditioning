@@ -148,7 +148,15 @@ vite.config.ts.timestamp-*
 
 # Originalne fotke (RAW, 3–8 MB) — ne idu u repo
 /design/originals/
+/design/drive-upload/
 *.zip
 
 # macOS
 .DS_Store
+
+# Google service account ključevi
+*-key.json
+
+# Fotke s Drivea (npm run sync / npm run media), generirano
+/public/media/
+/app/content/media.json

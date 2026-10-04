@@ -1,5 +1,5 @@
 .svc {
-  padding: clamp(4rem, 10vh, 7rem) 0 clamp(5rem, 12vh, 8rem);
+  padding: clamp(2.5rem, 6vh, 4.5rem) 0 clamp(3rem, 8vh, 5rem);
   border-top: 1px solid var(--line);
   background: var(--bg-2);
 
@@ -78,7 +78,7 @@
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   gap: clamp(2rem, 5vw, 5rem);
-  padding: clamp(3rem, 7vh, 4.5rem) 0;
+  padding: clamp(3rem, 7vh, 4.5rem) 0 0;
 
   @include below(tablet) {
     grid-template-columns: 1fr;
@@ -131,6 +131,13 @@
   }
 }
 
+// jedan stupac: gumb na sredini
+.feat .btns {
+  @include below(tablet) {
+    justify-content: center;
+  }
+}
+
 // Fokus / Za
 .spec {
   display: grid;
@@ -173,7 +180,7 @@
   justify-content: space-between;
   align-items: baseline;
   gap: 1rem;
-  margin: clamp(3.5rem, 8vh, 5rem) 0 1.25rem;
+  margin: clamp(2.5rem, 5vh, 3.5rem) 0 1.25rem;
 
   h3 {
     @include title;

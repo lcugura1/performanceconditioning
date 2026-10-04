@@ -31,11 +31,11 @@ export function Contact() {
   return (
     <section className="ct" id="kontakt">
       <div className="ct__bg" aria-hidden="true">
-        <img src={photos.contact.src} alt="" loading="lazy" decoding="async" />
+        <img src={photos.contact.src} srcSet={photos.contact.srcSet} sizes={photos.contact.sizes} alt="" loading="lazy" decoding="async" />
       </div>
 
       <div className="ct__panel">
-        <img className="bw" src={photos.contact.src} alt={photos.contact.alt} loading="lazy" decoding="async" />
+        <img className="bw" src={photos.contact.src} srcSet={photos.contact.srcSet} sizes={photos.contact.sizes} alt={photos.contact.alt} loading="lazy" decoding="async" />
         <span className="grid-ov" />
 
         <h2 className="disp ct__h rv">

@@ -1,5 +1,5 @@
 import googleJson from "./google-reviews.json";
-import { photos } from "./photos";
+import { galleryPhotos, photos } from "./photos";
 import type {
   AboutPoint,
   Audience,
@@ -45,9 +45,9 @@ export const startHere = {
 
 export const stats: Stat[] = [
   { kind: "text", value: "Magistar", label: "kineziologije" },
-  { kind: "count", value: 100, label: "sportaša i ambicioznih rekreativaca" },
-  { kind: "count", value: 5, label: "godina iskustva" },
-  { kind: "count", value: 3000, label: "odrađenih treninga" },
+  { kind: "count", value: 100, label: "sportaša i ambicioznih rekreativaca", short: "sportaša" },
+  { kind: "count", value: 5, label: "godina iskustva", short: "godina" },
+  { kind: "count", value: 3000, label: "odrađenih treninga", short: "treninga" },
 ];
 
 export const programsTitle = ["Uživo", "ili", "online."];
@@ -128,16 +128,10 @@ export const reviewScore = {
   url: google.url,
 };
 
-export const gallery: GalleryItem[] = [
-  { ...photos.gallery1, shape: "portrait" },
-  { ...photos.gallery2, shape: "landscape" },
-  { ...photos.gallery3, shape: "portrait" },
-  { ...photos.gallery4, shape: "landscape" },
-  { ...photos.gallery5, shape: "portrait" },
-  { ...photos.gallery6, shape: "landscape" },
-  { ...photos.gallery7, shape: "portrait" },
-  { ...photos.gallery8, shape: "landscape" },
-];
+export const gallery: GalleryItem[] = galleryPhotos.map(({ landscape, ...photo }) => ({
+  ...photo,
+  shape: landscape ? "landscape" : "portrait",
+}));
 
 export const contactHead = {
   title: [

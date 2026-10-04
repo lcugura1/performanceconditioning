@@ -15,7 +15,13 @@ export function Programs() {
         <h2 className="disp prog__title rv">
           {programsTitle.map((line, i) => (
             <Fragment key={line}>
-              {i > 0 && <br />}
+              {/* razmak ostaje kad se <br> sakrije (Programs.scss) */}
+              {i > 0 && (
+                <>
+                  {" "}
+                  <br />
+                </>
+              )}
               {line}
             </Fragment>
           ))}
@@ -27,6 +33,8 @@ export function Programs() {
               <img
                 className="pcard__img"
                 src={p.photo.src}
+                srcSet={p.photo.srcSet}
+                sizes={p.photo.sizes}
                 alt={p.photo.alt}
                 loading="lazy"
                 decoding="async"

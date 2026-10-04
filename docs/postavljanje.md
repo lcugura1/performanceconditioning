@@ -34,20 +34,30 @@ Sve (Drive, Cloud projekt, Cloudflare) ide na Gabrijelov Google Workspace račun
 
    ```
    stranica/
-     naslovna/          ← hero fotka (najnovija pobjeđuje)
-     naslovna-mobitel/  ← neobavezno: posebna hero fotka za mobitel
-     o-meni/            ← 2 fotke za sekciju „O meni”
-     usluge/            ← 3 fotke: djeca sportaši, sportaši, rehabilitacija (redoslijed brojem u imenu)
-     programi/          ← fotka za „Osobni trening”
-     galerija/          ← sve fotke galerije
-     recenzije/         ← fotka uz sekciju recenzija
-     kontakt/           ← fotka uz kontakt
+     naslovna/                 ← hero fotka (1; ako ih je više, najnovija)
+     djeca/                    ← skupina „Djeca sportaši”
+       kartica/                ← kartica u „Za koga je trening?”
+       usluga/                 ← velika fotka u sekciji Usluge
+       video/                  ← poster videa (kasnije i sam video)
+     sportasi/                 ← isto: kartica/, usluga/, video/
+     rehabilitacija/           ← isto: kartica/, usluga/, video/
+     programi/
+       osobni-trening/         ← fotka kartice „Osobni trening”
+       online/                 ← fotka kartice „Online suradnja”
+     o-meni/                   ← fotka u „O meni”
+     galerija/                 ← 8 fotki, redoslijed brojem u imenu (01, 02…)
+     kontakt/                  ← fotka uz kontakt
      blog/
-       objavljeno/      ← sve što je ovdje, vidi se na stranici
-       skice/           ← ovdje se piše; sync je ne čita
+       djeca/                  ← objavljeni postovi za djecu sportaše
+       sportasi/               ← objavljeni postovi za sportaše
+       rehabilitacija/         ← objavljeni postovi o rehabilitaciji
+       skice/                  ← ovdje se piše; sync je ne čita
    ```
 
-   Ovo prati sekcije u `app/content/site.ts` i `photos.ts`. Konačna imena potvrđujemo kad pišemo sync skriptu, pa ih ne mijenjaj nakon što sync proradi.
+   Ovo prati sekcije početne stranice (`app/content/photos.ts`, `audiences.ts`). `npm run check:drive` javlja koje mape fale ili su viška.
+
+   **Početne fotke su već složene** u `design/drive-upload/stranica/` (lokalno, nije u gitu): iste fotke kao na stranici sada, a ime fajla je ujedno alt tekst. Upload: obriši stare prazne podmape u `stranica` (`usluge`, `recenzije`, `naslovna-mobitel`, `programi`, `djeca`…, osim `blog`), pa sve mape iz `design/drive-upload/stranica/` povuci mišem u otvorenu mapu `stranica` u Driveu. U `blog/` ručno napravi `djeca`, `sportasi`, `rehabilitacija` i obriši `objavljeno` (prazne mape se ne uploadaju).
+
 5. Ne dijeli mapu ni s kim (dijeljenje dolazi u Fazi 2, korak 8).
 6. Otvori mapu `stranica` i u adresnoj traci kopiraj dio iza `/folders/`, **bez** svega od `?` nadalje. Iz `…/folders/17s2iSsbYaopxNaiPVB5D9YXB0o60FNn5?dmr=1&ec=…` ID je `17s2iSsbYaopxNaiPVB5D9YXB0o60FNn5`. To je **`DRIVE_ROOT_FOLDER_ID`** i upisuje se na tri mjesta:
    - lokalno u `.env` u rootu repoa, redak `DRIVE_ROOT_FOLDER_ID=17s2iSsbYaopxNaiPVB5D9YXB0o60FNn5` (već upisano; za `npm run check:drive`; `.env` je u `.gitignore`)
@@ -57,8 +67,8 @@ Sve (Drive, Cloud projekt, Cloudflare) ide na Gabrijelov Google Workspace račun
 
 **Pravila za Gabrijela** (pošalji mu ih napisana):
 
-- **Redoslijed fotki:** broj na početku imena, veći ide prvi (`03 - sprint.jpg` ispred `01 - …`). Nenumerirane idu iza, najnovije prve.
-- **Opis fotke (alt):** desni klik na fotku → **Informacije o datoteci → Opis**.
+- **Redoslijed fotki (galerija):** broj na početku imena, `01` prvi. Nenumerirane idu iza, najnovije prve. U mapama s jednom fotkom (naslovna, kartice…) vrijedi najnovija.
+- **Opis fotke (alt):** ime fajla je opis („Trener gura sanjke.jpg”); broj na početku se ne računa. Drugačiji opis: desni klik → **Informacije o datoteci → Opis**, on ima prednost.
 - **Format:** JPEG ili PNG. S iPhonea: Postavke → Kamera → Formati → „Najkompatibilnije”, ili izvoz u JPEG.
 - **Brisanje:** obrisana fotka nestane sa stranice za ~10 min; vraćanjem iz koša vraća se.
 - **Blog:** vidi Fazu 5.
@@ -106,7 +116,7 @@ Nove organizacije zadano zabranjuju JSON ključeve za service account (`iam.disa
 1. Otvori mapu `stranica`: https://drive.google.com/drive/folders/17s2iSsbYaopxNaiPVB5D9YXB0o60FNn5 → gore uz ime mape strelica → **Dijeli → Dijeli**.
 2. Zalijepi `drive-sync@performanceconditioning.iam.gserviceaccount.com` → uloga **Čitatelj** (Viewer) → makni kvačicu **„Obavijesti osobe”** → **Dijeli**.
 3. Na upozorenje da je adresa izvan organizacije: **Svejedno dijeli**. Ako dijeljenje izvan organizacije nije dopušteno: **admin.google.com → Apps → Google Workspace → Drive and Docs → Sharing settings** → dopusti dijeljenje izvan `gabrijelperformance.com` → Save, pa ponovi.
-4. Provjera: kopiraj `check:drive` skriptu iz capturedwella u `scripts/` i pokreni `npm run check:drive`. Javlja prijavu, dijeljenje, imena podmapa i broj fotki.
+4. Provjera: `npm run check:drive`. Javlja prijavu, dijeljenje, imena podmapa i broj fotki.
 
 ## Faza 3: Cloudflare
 
@@ -204,9 +214,9 @@ Gabrijel piše post kao običan Google Doc (ne .docx, kako je bilo u README-u: D
 4. Podebljano, kurziv, linkovi, liste i citati prolaze. Boje, fontovi i veličine se namjerno gube.
 5. Slike: **Umetni → Slika**. Prva slika je naslovna slika posta i slika pri dijeljenju.
 6. Prvi odlomak je sažetak u popisu postova i opis za Google.
-7. **Objava:** premjesti dokument u `blog/objavljeno/` (desni klik → Organiziraj → Premjesti). **Povlačenje:** vrati u `skice/`. **Izmjena:** uredi dokument izravno u `objavljeno/`; na stranici je za ~10 min.
+7. **Objava:** premjesti dokument u `blog/djeca/`, `blog/sportasi/` ili `blog/rehabilitacija/` (skupina kojoj je post namijenjen) (desni klik → Organiziraj → Premjesti). **Povlačenje:** vrati u `skice/`. **Izmjena:** uredi dokument izravno u toj mapi; na stranici je za ~10 min.
 
-**Postojeći WordPress post** (samo jedan): otvori `https://performanceconditioning.hr/2025/08/i-jos-jedan-za-carousel/`, kopiraj tekst u novi Doc „Zašto vam je osobni trener potreban?” u `blog/objavljeno/`, slike umetni ponovno. Stari URL dobiva 301 (Faza 7), a datum objave (6. 8. 2025.) upisujem ručno u `sync.json`.
+**Postojeći WordPress post** (samo jedan): otvori `https://performanceconditioning.hr/2025/08/i-jos-jedan-za-carousel/`, kopiraj tekst u novi Doc „Zašto vam je osobni trener potreban?” u `blog/sportasi/`, slike umetni ponovno. Stari URL dobiva 301 (Faza 7), a datum objave (6. 8. 2025.) upisujem ručno u `sync.json`.
 
 Kodni dio (sync `blog/objavljeno/` preko `modifiedTime` i `files.export` u Markdown, rute `/blog` i `/blog/:slug`, prerender iz `blog.json`, meta/OG/JSON-LD, sitemap) je moj posao.
 
@@ -277,9 +287,9 @@ Jedini realni troškovi koji se mogu pojaviti:
 ## Checklist
 
 - [ ] Faza 0: Gabrijel odgovorio (mail na domeni, gdje se obnavlja domena, MailerLite)
-- [ ] Namjenski Gmail, 2FA, oporavak na Gabrijela
-- [ ] Drive podmape (root mapa `stranica` gotova, ID `17s2iSsbYaopxNaiPVB5D9YXB0o60FNn5`)
-- [ ] Cloud projekt, Drive API, service account, JSON ključ, mapa podijeljena kao Čitatelj
+- [ ] 2FA na `info@gabrijelperformance.com`, recovery mail potvrđen
+- [x] Drive mape (root `stranica`, ID `17s2iSsbYaopxNaiPVB5D9YXB0o60FNn5`)
+- [x] Cloud projekt, Drive API, service account, JSON ključ, mapa podijeljena kao Čitatelj (`npm run check:drive` prolazi)
 - [ ] Cloudflare račun, ti kao Super Admin, DNS izvezen s Kuhade i prepisan, SPF spojen, nameserveri promijenjeni
 - [ ] Provjera: WordPress i mail rade nakon promjene nameservera
 - [ ] R2 bucket `pc-media`, `img.` domena, R2 token, Workers API token

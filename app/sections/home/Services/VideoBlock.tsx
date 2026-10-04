@@ -28,7 +28,11 @@ export function VideoBlock({ video, poster, title }: Props) {
 
   return (
     <div className="vid">
-      <img src={video?.poster ?? poster.src} alt="" loading="lazy" decoding="async" />
+      {video?.poster ? (
+        <img src={video.poster} alt="" loading="lazy" decoding="async" />
+      ) : (
+        <img src={poster.src} srcSet={poster.srcSet} sizes={poster.sizes} alt="" loading="lazy" decoding="async" />
+      )}
       <span className="grid-ov" />
       <button
         type="button"

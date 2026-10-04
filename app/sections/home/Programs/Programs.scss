@@ -2,7 +2,7 @@
 .prog {
   position: relative;
   margin: -1px 0;
-  padding: calc(4vw + clamp(1.5rem, 4svh, 5rem)) 0;
+  padding: calc(4vw + clamp(1rem, 3svh, 3.5rem)) 0;
   background: var(--paper);
   color: var(--ink);
   clip-path: polygon(0 4vw, 100% 0, 100% calc(100% - 4vw), 0 100%);
@@ -28,6 +28,7 @@
 
   &__title {
     font-size: clamp(3rem, min(6vw, 11svh), 7rem);
+    word-spacing: 0.12em; // kao "Za koga je trening?"
 
     @include below(nav) {
       grid-column: 1 / -1;

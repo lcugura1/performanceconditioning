@@ -43,6 +43,8 @@ export function Start() {
               <span className="scard__img">
                 <img
                   src={a.card.src}
+                  srcSet={a.card.srcSet}
+                  sizes={a.card.sizes}
                   alt={a.card.alt}
                   loading="lazy"
                   decoding="async"

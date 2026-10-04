@@ -4,7 +4,6 @@ import { audiences, defaultAudience } from "~/content/audiences";
 import type { Audience } from "~/content/types";
 import { useAudience } from "~/features/audience/useAudience";
 import { cx } from "~/lib/cx";
-import { scrollToSection } from "~/lib/scroll-to";
 import { BlogCard } from "./BlogCard";
 import { NewsletterForm } from "./NewsletterForm";
 import { VideoBlock } from "./VideoBlock";
@@ -91,19 +90,14 @@ export function Services() {
                       <Icon name="arrowDownRight" />
                     </span>
                   </a>
-                  <a
-                    className="pill pill--line"
-                    href="#video"
-                    onClick={(e) => scrollToSection("video") && e.preventDefault()}
-                  >
-                    Pogledaj kako radimo
-                  </a>
                 </div>
               </div>
             </div>
             <div className="feat__media">
               <img
                 src={current.photo.src}
+                srcSet={current.photo.srcSet}
+                sizes={current.photo.sizes}
                 alt={current.photo.alt}
                 loading="lazy"
                 decoding="async"

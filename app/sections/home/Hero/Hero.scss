@@ -64,9 +64,6 @@
       }
     }
 
-    @include below(phone) {
-      font-size: clamp(3rem, 15vw, 4.5rem);
-    }
   }
 
   &__l {
@@ -101,6 +98,94 @@
     font-size: clamp(1.0625rem, 1.2vw, 1.2rem);
     line-height: 1.55;
   }
+
+  &__more .ic {
+    display: none;
+  }
+
+  // Mobitel: naslov gore lijevo uz lice (riječ po retku, ne siječe lice desno),
+  // "Struktura treninga." kao prigušeni nastavak; tekst, gumbi i brojke na dnu
+  @include below(phone) {
+    &__shade {
+      background:
+        linear-gradient(90deg, rgba(11, 11, 11, 0.55) 0%, rgba(11, 11, 11, 0) 60%),
+        linear-gradient(
+          180deg,
+          rgba(11, 11, 11, 0.45) 0%,
+          rgba(11, 11, 11, 0.15) 25%,
+          rgba(11, 11, 11, 0.35) 45%,
+          rgba(11, 11, 11, 0.9) 65%,
+          #0b0b0b 100%
+        );
+    }
+
+    &__in {
+      justify-content: flex-start;
+      gap: 0;
+      padding-top: calc(var(--hdr) + 1rem);
+      padding-bottom: 1.25rem;
+    }
+
+    // riječ po retku u uskom lijevom stupcu: naslov ide više, a ne siječe lice desno
+    &__h {
+      font-size: clamp(2.2rem, 10.5vw, 2.9rem);
+      line-height: 0.9;
+    }
+
+    &__r {
+      padding-left: 0;
+    }
+
+    // omotači donjeg bloka nestaju, pa je "Struktura treninga." odmah ispod
+    // naslova, a margin-bottom: auto gura ostatak na dno
+    &__bottom,
+    &__bottom > .in {
+      display: contents;
+    }
+
+    &__bottom > .in > * {
+      animation: up 1s var(--ease) 0.7s both;
+    }
+
+    &__third {
+      max-width: 6em; // dva retka, da ne prelazi preko lica
+      margin: 0.05em 0 auto;
+      padding-bottom: 1.5rem;
+      color: #8f8f8d;
+      font: 800 clamp(1.6rem, 7.6vw, 2.1rem) / 0.9 var(--font-display);
+      letter-spacing: -0.045em;
+    }
+
+    &__lead {
+      max-width: 21rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.975rem;
+      line-height: 1.55;
+    }
+
+    &__bottom .btns {
+      margin-bottom: 1.5rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    // sekundarni gumb kao .ulink
+    &__more.pill {
+      gap: 0.6rem;
+      min-height: 0;
+      padding: 0 0 0.6rem;
+      border: 0;
+      border-bottom: 1px solid currentColor;
+      border-radius: 0;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+    }
+
+    &__more .ic {
+      display: block;
+    }
+  }
 }
 
 // Staklena kartica brojki
@@ -126,6 +211,14 @@
   @include below(tablet) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     row-gap: 1.25rem;
+  }
+
+  // mobitel: sve četiri brojke u jednom retku
+  @include below(phone) {
+    grid-template-columns: repeat(4, auto);
+    justify-content: space-between;
+    padding: 0.9rem 1rem;
+    border-radius: 1rem;
   }
 }
 
@@ -155,6 +248,22 @@
     }
   }
 
+  @include below(phone) {
+    justify-content: space-between;
+    gap: 0.3rem;
+    padding: 0 0 0 0.75rem;
+
+    &:nth-child(3) {
+      padding-left: 0.75rem;
+      border-left: 1px solid ink-a(0.16);
+    }
+
+    &:nth-child(-n + 2) {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+  }
+
   &__n {
     order: -1;
     margin: 0;
@@ -169,6 +278,16 @@
       font-size: clamp(1.5rem, min(2.6vw, 4svh), 2.4rem);
       line-height: 1.05;
     }
+
+    @include below(phone) {
+      font-size: clamp(1.15rem, 5.4vw, 1.5rem);
+
+      // "Magistar" mora stati u stupac
+      &--sm {
+        font-size: clamp(0.8rem, 3.5vw, 0.95rem);
+        line-height: 1;
+      }
+    }
   }
 
   &__l {
@@ -176,6 +295,25 @@
     color: #4a4a46;
     font-size: 0.9375rem;
     line-height: 1.4;
+
+    @include below(phone) {
+      font-size: 0.6875rem;
+      line-height: 1.25;
+    }
+  }
+
+  &__short {
+    display: none;
+  }
+
+  @include below(phone) {
+    &__full {
+      display: none;
+    }
+
+    &__short {
+      display: inline;
+    }
   }
 }
 
@@ -190,7 +328,8 @@
 
 @include reduced-motion {
   .hero__bg img,
-  .hero__h .ln > span {
+  .hero__h .ln > span,
+  .hero__bottom > .in > * {
     animation: none;
   }
 }

@@ -23,6 +23,8 @@ export function About() {
           <div className="about__photo">
             <img
               src={photos.about.src}
+              srcSet={photos.about.srcSet}
+              sizes={photos.about.sizes}
               alt={photos.about.alt}
               loading="lazy"
               decoding="async"
