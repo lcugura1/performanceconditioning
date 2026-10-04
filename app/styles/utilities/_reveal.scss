@@ -8,48 +8,23 @@
   transition: opacity 1s var(--ease), transform 1s var(--ease);
 }
 
-.rv-img {
-  transition: clip-path 1.3s var(--ease);
-
-  img {
-    transition: transform 1.6s var(--ease);
-  }
-}
-
-.rd1 { transition-delay: 0.1s; }
-.rd2 { transition-delay: 0.2s; }
+.rd1 { transition-delay: 0.08s; }
+.rd2 { transition-delay: 0.16s; }
+.rd3 { transition-delay: 0.24s; }
 
 .js-reveal {
   .rv:not([data-revealed]) {
     opacity: 0;
-    transform: translateY(32px);
-  }
-
-  .rv-img:not([data-revealed]) {
-    clip-path: inset(12% 0 0 0);
-
-    img {
-      transform: scale(1.12);
-    }
-  }
-
-  .rv-img[data-revealed] {
-    clip-path: inset(0 0 0 0);
+    transform: translateY(2rem);
   }
 }
 
 @include reduced-motion {
   .js-reveal {
-    .rv:not([data-revealed]),
-    .rv-img:not([data-revealed]) {
+    .rv:not([data-revealed]) {
       opacity: 1;
       transform: none;
-      clip-path: none;
       transition: none;
-    }
-
-    .rv-img:not([data-revealed]) img {
-      transform: none;
     }
   }
 }

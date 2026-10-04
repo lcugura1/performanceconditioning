@@ -2,26 +2,46 @@ import googleJson from "./google-reviews.json";
 import { photos } from "./photos";
 import type {
   AboutPoint,
+  Audience,
   ContactLink,
   GalleryItem,
   GoogleReviews,
   NavItem,
   Program,
   Review,
-  Service,
   Stat,
 } from "./types";
 
 export const siteName = "Performance Conditioning";
 
+// Glavna navigacija; kontakt je u headeru gumb "Javi se", a u mobilnom izborniku zadnja stavka.
 export const nav: NavItem[] = [
-  { id: "usluge", label: "usluge" },
-  { id: "programi", label: "programi" },
-  { id: "o-meni", label: "o meni" },
-  { id: "recenzije", label: "recenzije" },
-  { id: "galerija", label: "galerija" },
-  { id: "kontakt", label: "kontakt" },
+  { id: "usluge", label: "Usluge" },
+  { id: "programi", label: "Programi" },
+  { id: "o-meni", label: "O meni" },
+  { id: "recenzije", label: "Recenzije" },
+  { id: "blog", label: "Blog" },
+  { id: "galerija", label: "Galerija" },
 ];
+
+export const contactNav: NavItem = { id: "kontakt", label: "Kontakt" };
+
+export const hero = {
+  // dva bloka naslova, drugi uvučen udesno; svaki redak se zasebno podiže
+  title: [
+    ["Bolja", "izvedba."],
+    ["Manje", "ozljeda."],
+  ],
+  third: "Struktura treninga.",
+  lead: "Poboljšaj svoje sportske performanse i riješi se ozljeda. Rad s djecom sportašima, sportašima i rehabilitacija ozljeda.",
+  cta: "Želim biti bolji sportaš",
+  secondary: "Za koga je trening",
+};
+
+export const startHere = {
+  title: ["Za koga je", "trening?"],
+  lead: "Odaberi što te zanima i stranica će ti prvo pokazati video, članke i način rada za tu skupinu.",
+};
 
 export const stats: Stat[] = [
   { kind: "text", value: "Magistar", label: "kineziologije" },
@@ -30,38 +50,20 @@ export const stats: Stat[] = [
   { kind: "count", value: 3000, label: "odrađenih treninga" },
 ];
 
-export const services: Service[] = [
-  {
-    title: "Djeca sportaši",
-    text: "Sigurna i strukturirana izgradnja atletskih temelja — snaga, koordinacija i brzina prilagođeni razvojnoj dobi.",
-    photo: { ...photos.coachDrill, alt: "Trener vodi vježbu s mladim sportašima" },
-  },
-  {
-    title: "Sportaši",
-    text: "Poboljšanje sportskih performansi — snaga, eksplozivnost i kondicija prema zahtjevima tvog sporta.",
-    photo: photos.coachBall,
-  },
-  {
-    title: "Rehabilitacija ozljeda",
-    text: "Siguran povratak u sport nakon ozljede — jače i otpornije nego prije.",
-    photo: { ...photos.coachTalk, position: "35% center" },
-  },
-];
+export const programsTitle = ["Uživo", "ili", "online."];
 
 export const programs: Program[] = [
   {
     tag: "Teretana · teren",
     title: "Osobni trening",
     text: "Individualni trening za sportaše, djecu sportaše i rehabilitaciju ozljeda, uživo u teretani ili na terenu.",
-    photo: photos.walkThree,
+    photo: photos.programGym,
   },
   {
     tag: "Online",
     title: "Online suradnja",
     text: "Online trening za sportaše, djecu sportaše i rehabilitaciju ozljeda — gradimo sustav koji mijenja vašu sportsku karijeru, poboljšava performanse i smanjuje ozljede.",
-    // TODO: snimka zaslona aplikacije za online treninge
-    photo: null,
-    placeholder: "Snimka zaslona aplikacije za online treninge",
+    photo: photos.programOnline,
   },
 ];
 
@@ -80,6 +82,10 @@ export const about: AboutPoint[] = [
   },
 ];
 
+// Citat ispod uvoda u sekciji O meni, dva retka.
+// TODO: potvrditi tekst s Gabrijelom
+export const aboutQuote = ["Struktura iz znanosti,", "rezultati na terenu."];
+
 // Ručno odabrane recenzije. Svježe s Googlea (scripts/fetch-google-reviews.mjs)
 // idu ispred njih; ista osoba se ne prikazuje dvaput.
 const pinnedReviews: Review[] = [
@@ -87,24 +93,34 @@ const pinnedReviews: Review[] = [
     quote: "Radim kod Gabija vec par mjeseci i top je, od kad sam krenuo s njim poboljsala mi se snaga, eksplozivnost, kondicija…",
     author: "Petar S.",
     source: "Google recenzija",
+    audience: "sportasi",
   },
   {
     quote: "Kondicijska priprema kod trenera Gabrijela je na vrhunskoj razini. Treninzi su stručno vođeni, dobro strukturirani i prilagođeni individualnim potrebama…",
     author: "Josip Z.",
     source: "Google recenzija",
+    audience: "sportasi",
   },
   {
     quote: "Gabrijel je trener koji je vrlo posvecen poslu koji radi, komunikacija je na top nivou te je individualan pristup takoder odlican.",
     author: "Luka M.",
     source: "Google recenzija",
+    audience: "sportasi",
   },
 ];
 
-const google: GoogleReviews = googleJson;
+// Skripta Google recenzije svrstava po ključnim riječima ("sin", "ozljeda"…).
+// Kad pogodi krivo, ovdje se ispravlja po autoru, npr. "Ana K.": "rehab".
+const reviewAudienceOverrides: Record<string, Audience> = {};
 
-export const reviews: Review[] = [...google.reviews, ...pinnedReviews].filter(
-  (r, i, all) => all.findIndex((o) => o.author === r.author) === i,
-);
+const google = googleJson as GoogleReviews;
+
+export const reviews: Review[] = [...google.reviews, ...pinnedReviews]
+  .filter((r, i, all) => all.findIndex((o) => o.author === r.author) === i)
+  .map((r) => ({
+    ...r,
+    audience: reviewAudienceOverrides[r.author] ?? r.audience ?? "sportasi",
+  }));
 
 export const reviewScore = {
   rating: google.rating ?? 5,
@@ -113,13 +129,26 @@ export const reviewScore = {
 };
 
 export const gallery: GalleryItem[] = [
-  { ...photos.walkTwo, shape: "portrait" },
-  { ...photos.heroHandshake, alt: "Trener s tri nogometaša", shape: "landscape" },
-  { ...photos.coachGesture, alt: "Trener daje upute", shape: "portrait" },
-  { ...photos.coachSmile, alt: "Nasmijani trener", shape: "landscape" },
-  { ...photos.coachBall, alt: "Trener s loptom", shape: "portrait" },
-  { ...photos.coachTalk, alt: "Razgovor sa sportašem", shape: "landscape" },
+  { ...photos.gallery1, shape: "portrait" },
+  { ...photos.gallery2, shape: "landscape" },
+  { ...photos.gallery3, shape: "portrait" },
+  { ...photos.gallery4, shape: "landscape" },
+  { ...photos.gallery5, shape: "portrait" },
+  { ...photos.gallery6, shape: "landscape" },
+  { ...photos.gallery7, shape: "portrait" },
+  { ...photos.gallery8, shape: "landscape" },
 ];
+
+export const contactHead = {
+  title: [
+    ["Pošaljite", "mi poruku"],
+    ["već", "danas."],
+  ],
+  intro: "Ostavi kontakt i javit ću ti se da dogovorimo prvi trening.",
+  submit: "Dogovori trening",
+  // forma za sad otvara WhatsApp s porukom; TODO: pravo slanje (Cloudflare Worker + email)
+  sent: "Hvala! Otvorio se WhatsApp s tvojom porukom — samo je pošalji.",
+};
 
 export const contact = {
   whatsapp: "https://wa.me/385992994492",

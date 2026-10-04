@@ -2,18 +2,20 @@ import { useRef } from "react";
 import { stats } from "~/content/site";
 import { useCountUp } from "~/hooks/useCountUp";
 import { useInView } from "~/hooks/useInView";
+import { cx } from "~/lib/cx";
 
-/** Staklena traka s brojkama preko donjeg ruba hero fotke. */
+/** Staklena kartica s brojkama preko donjeg dijela hero fotke; brojke se odbroje kad uđu u ekran. */
 export function HeroStats() {
   const ref = useRef<HTMLDListElement>(null);
   const progress = useCountUp(useInView(ref));
 
   return (
-    <dl className="hstats glass glass-rim squircle" ref={ref}>
+    <dl className="gstats in dl6" ref={ref} aria-label="Iskustvo u brojkama">
       {stats.map((s) => (
-        <div className="hstats__item" key={s.label}>
-          <dt className="hstats__lbl">{s.label}</dt>
-          <dd className={s.kind === "text" ? "hstats__num serif" : "hstats__num"}>
+        <div className="gstat" key={s.label}>
+          {/* dt mora biti prije dd; broj se vizualno diže iznad oznake (order u Hero.scss) */}
+          <dt className="gstat__l">{s.label}</dt>
+          <dd className={cx("gstat__n", s.kind === "text" && "gstat__n--sm")}>
             {s.kind === "text" ? s.value : `${Math.round(s.value * progress)}+`}
           </dd>
         </div>

@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { REVEAL_OBSERVER_OPTIONS } from "./useInView";
 
-const SELECTOR = ".rv:not([data-revealed]), .rv-img:not([data-revealed])";
+const SELECTOR = ".rv:not([data-revealed])";
 
 /**
- * Otkriva `.rv` (fade-up) i `.rv-img` (clip-path + zoom) elemente kad uđu u viewport.
+ * Otkriva `.rv` elemente (fade-up) kad uđu u viewport.
  * Stanje se piše u atribut `data-revealed`, a ne u klasu, jer React pri
  * re-renderu prepisuje `className` ali ne dira atribute koje ne poznaje.
  *

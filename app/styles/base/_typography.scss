@@ -1,33 +1,24 @@
 @use "abstracts" as *;
 
-// Naslov (Archivo 700)
-.h {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 0.98;
-}
-
-// Naglasak u naslovima, citati, recenzije
-.serif {
-  font-family: var(--font-serif);
-  font-weight: 400;
-  font-style: italic;
-  letter-spacing: -0.01em;
-}
-
-.h2 {
-  font-size: clamp(40px, 5.4vw, 80px);
-}
-
 .wrap {
   width: 100%;
-  max-width: 1336px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 32px;
+  padding-inline: var(--gutter);
+}
 
-  @include below(xs) {
-    padding: 0 20px;
-  }
+// Veliki naslov (Archivo 800, velika slova)
+.disp {
+  @include disp;
+}
+
+// Naslov sekcije (Geist 500, velika slova)
+.title {
+  @include title;
+  font-size: clamp(2.25rem, 4.6vw, 4.25rem);
+}
+
+// Sitna oznaka
+.label {
+  @include label;
 }

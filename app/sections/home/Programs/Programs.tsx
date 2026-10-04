@@ -1,51 +1,52 @@
-import { useState } from "react";
+import { Fragment } from "react";
 import { Icon } from "~/components/ui/Icon";
-import { Media, MediaPlaceholder } from "~/components/ui/Media";
-import { programs } from "~/content/site";
+import { programs, programsTitle } from "~/content/site";
 import { cx } from "~/lib/cx";
 import "./Programs.scss";
 
-// Naslov "Uživo ili online." je ujedno i prekidač: riječi su gumbi.
-// Oba panela su u HTML-u (tražilice), neaktivni je `hidden`; kad se prikaže,
-// CSS animacije ulaska krenu ispočetka.
+/**
+ * Svijetla traka s kosim rubovima: naslov u uskom stupcu lijevo, dva formata
+ * (uživo, online) kao visoke fotke s tekstom preko donjeg dijela.
+ */
 export function Programs() {
-  const [active, setActive] = useState(0);
-
-  const option = (index: number, label: string, className?: string) => (
-    <button
-      type="button"
-      className={cx("prog__opt", className, active === index && "is-active")}
-      aria-pressed={active === index}
-      aria-controls={`program-${index}`}
-      onClick={() => setActive(index)}
-    >
-      {label}
-    </button>
-  );
-
   return (
     <section className="prog" id="programi">
-      <div className="wrap">
-        <h2 className="h h2 prog__title rv">
-          {option(0, "Uživo")} <span className="prog__or serif">ili</span> {option(1, "online")}
+      <div className="wrap prog__grid">
+        <h2 className="disp prog__title rv">
+          {programsTitle.map((line, i) => (
+            <Fragment key={line}>
+              {i > 0 && <br />}
+              {line}
+            </Fragment>
+          ))}
         </h2>
 
         {programs.map((p, i) => (
-          <div className="prog__panel" id={`program-${i}`} key={p.title} hidden={i !== active}>
+          <article className={cx("pcard rv", `rd${i + 1}`)} key={p.title}>
             {p.photo ? (
-              <Media photo={p.photo} className="prog__media" />
+              <img
+                className="pcard__img"
+                src={p.photo.src}
+                alt={p.photo.alt}
+                loading="lazy"
+                decoding="async"
+                style={p.photo.position ? { objectPosition: p.photo.position } : undefined}
+              />
             ) : (
-              <MediaPlaceholder label={p.placeholder ?? p.title} className="prog__media" />
+              <div className="pcard__img pcard__ph">{p.placeholder ?? p.title}</div>
             )}
-            <div className="prog__body">
-              <span className="prog__tag">{p.tag}</span>
-              <h3>{p.title}</h3>
+            <div className="pcard__body">
+              <div className="pcard__head">
+                <h3>{p.title}</h3>
+                <span className="pcard__tag">{p.tag}</span>
+              </div>
               <p>{p.text}</p>
-              <a className="link" href="#kontakt">
-                Saznaj više <Icon name="arrowRight" />
+              <a className="ulink" href="#kontakt">
+                Saznaj više
+                <Icon name="arrowUpRight" />
               </a>
             </div>
-          </div>
+          </article>
         ))}
       </div>
     </section>

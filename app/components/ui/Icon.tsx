@@ -1,16 +1,11 @@
 // Linijske ikone iz dizajna (24×24, stroke = currentColor, stil u _icons.scss).
 
 const paths = {
-  arrowRight: <path d="M5 12h14M13 6l6 6-6 6" />,
   arrowUpRight: <path d="M7 17L17 7M8 7h9v9" />,
+  arrowDownRight: <path d="M7 7l10 10M17 9v8H9" />,
+  arrowDown: <path d="M12 5v14M6 13l6 6 6-6" />,
+  menu: <path d="M4 8h16M4 16h16" />,
   close: <path d="M6 6l12 12M18 6L6 18" />,
-  whatsapp: <path d="M20.5 12a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.1-4.3A8.5 8.5 0 1 1 20.5 12z" />,
-  monitor: (
-    <>
-      <rect x="3" y="4" width="18" height="12" rx="1.5" />
-      <path d="M8 20h8M12 16v4" />
-    </>
-  ),
 };
 
 export type IconName = keyof typeof paths;

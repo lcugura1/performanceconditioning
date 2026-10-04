@@ -1,73 +1,97 @@
 @use "abstracts" as *;
 
-.btn {
+// Gumb-pilula (redizajn): velika slova, puni radijus.
+// Uz strelicu: <span class="pill__dot"><Icon name="arrowDownRight" /></span>
+.pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  min-height: 56px;
-  padding: 0 28px;
-  border: 0;
+  gap: 0.75rem;
+  min-height: 3.25rem;
+  padding: 0 1.6rem;
+  border: 1px solid transparent;
   border-radius: 999px;
-  font: 700 16px/1 var(--font-sans);
+  font: 600 0.8125rem/1 var(--font-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
-  transition: transform 0.35s var(--ease), background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.35s var(--ease);
 
-  .ic {
-    transition: transform 0.35s var(--ease);
-  }
-
-  &:hover .ic {
-    transform: translateX(4px);
-  }
-
-  &--accent {
-    background: var(--accent);
+  &--white {
+    background: var(--text);
     color: var(--ink);
 
     &:hover {
+      background: #fff;
       color: var(--ink);
       transform: translateY(-2px);
     }
   }
 
-  &--ink {
-    background: var(--ink);
-    color: var(--paper);
+  &--line {
+    border-color: var(--line-2);
+    background: transparent;
+    color: var(--text);
 
     &:hover {
-      color: var(--paper);
-      background: var(--ink-hover);
+      border-color: var(--text);
+      color: var(--text);
     }
   }
 
-  &--block {
-    width: 100%;
+  &--ink {
+    background: var(--ink);
+    color: var(--text);
+
+    &:hover {
+      color: #fff;
+      transform: translateY(-2px);
+    }
+  }
+
+  &__dot {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-right: -1rem;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--text);
+  }
+
+  &--ink &__dot {
+    background: var(--text);
+    color: var(--ink);
   }
 }
 
-// Tekstualni link sa strelicom
-.link {
+// Red gumbova
+.btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+// Podcrtani link velikim slovima sa strelicom gore-desno
+.ulink {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding-bottom: 4px;
-  border-bottom: 1.5px solid currentColor;
-  font-weight: 700;
+  gap: 0.6rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid currentColor;
+  font: 500 0.8125rem/1 var(--font-sans);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   text-decoration: none;
-  color: var(--ink);
-
-  &:hover {
-    color: var(--accent-deep);
-  }
 
   .ic {
     transition: transform 0.35s var(--ease);
   }
 
   &:hover .ic {
-    transform: translateX(4px);
+    transform: translate(3px, -3px);
   }
 }

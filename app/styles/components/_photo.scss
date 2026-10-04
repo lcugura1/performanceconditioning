@@ -1,0 +1,30 @@
+@use "abstracts" as *;
+
+// Tretman fotografija: crno-bijelo samo hero i kontakt (ostale fotke su u
+// izvornoj boji), mreža i zrno preko.
+
+.bw {
+  filter: grayscale(1) contrast(1.08) brightness(0.86);
+}
+
+// Fina mreža preko fotke
+.grid-ov {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(on-dark(0.07) 1px, transparent 1px),
+    linear-gradient(90deg, on-dark(0.07) 1px, transparent 1px);
+  background-size: 4.5rem 4.5rem;
+}
+
+// Zrno (SVG šum, vidi components/ui/Grain.tsx)
+.grain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+}

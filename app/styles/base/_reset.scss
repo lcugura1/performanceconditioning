@@ -14,17 +14,13 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-sans);
-  font-size: 17px;
+  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
-
-  @include below(xs) {
-    font-size: 16px;
-  }
 }
 
 img {
@@ -33,14 +29,20 @@ img {
 }
 
 a {
-  color: var(--ink);
+  color: var(--text);
 
   &:hover {
-    color: var(--accent-deep);
+    color: #fff;
   }
 }
 
 :focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--text);
   outline-offset: 3px;
+}
+
+// sidra ne završe ispod fixed headera
+section[id],
+header[id] {
+  scroll-margin-top: var(--hdr);
 }

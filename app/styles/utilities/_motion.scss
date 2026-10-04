@@ -5,17 +5,17 @@
   animation: up 1s var(--ease) both;
 }
 
-.dl1 { animation-delay: 0.05s; }
-.dl2 { animation-delay: 0.14s; }
-.dl3 { animation-delay: 0.23s; }
+.dl1 { animation-delay: 0.1s; }
+.dl2 { animation-delay: 0.2s; }
+.dl3 { animation-delay: 0.35s; }
 .dl4 { animation-delay: 0.45s; }
-.dl5 { animation-delay: 0.6s; }
-.dl6 { animation-delay: 0.75s; }
+.dl5 { animation-delay: 0.7s; }
+.dl6 { animation-delay: 0.85s; }
 
 @keyframes up {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(1.25rem);
   }
   to {
     opacity: 1;

@@ -1,0 +1,121 @@
+.start {
+  padding: clamp(5rem, 14vh, 9rem) 0 clamp(4rem, 10vh, 7rem);
+  @include fits-screen;
+
+  &__head {
+    margin-bottom: clamp(1.5rem, 4svh, 4.5rem);
+    text-align: center;
+
+    .disp {
+      font-size: clamp(3.25rem, min(10vw, 10svh), 9rem);
+    }
+
+    p {
+      max-width: 32rem;
+      margin: clamp(0.75rem, 2svh, 1.5rem) auto 0;
+      color: var(--muted);
+    }
+  }
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2vw, 1.75rem);
+
+  @include below(tablet) {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+// Kartica skupine: kosa fotka (paralelogram), svijetla oznaka, tekst, "Saznaj više"
+.scard {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.6rem, 1.5svh, 1rem);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &__img {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    clip-path: polygon(16% 0, 100% 0, 84% 100%, 0 100%);
+    transition: clip-path 0.8s var(--ease);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @include below(tablet) {
+      aspect-ratio: 4 / 3;
+    }
+
+    // desktop: visina po ekranu, da sekcija stane bez skrolanja
+    @include above(tablet) {
+      aspect-ratio: auto;
+      height: clamp(12rem, 30svh, 32rem);
+    }
+  }
+
+  &:hover &__img {
+    clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+  }
+
+  &__lbl {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--paper);
+    color: var(--ink);
+    font: 600 0.875rem/1.1 var(--font-sans);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+
+    small {
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: #55554f;
+    }
+  }
+
+  &__txt {
+    margin: 0;
+    padding-right: 1rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  &__more {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line-2);
+    @include caps(0.75rem, 0.12em);
+    transition: border-color 0.3s;
+  }
+
+  &:hover &__more {
+    border-color: var(--text);
+  }
+
+  &.is-on &__lbl {
+    background: var(--text);
+  }
+
+  &.is-on &__more {
+    border-color: var(--accent);
+  }
+}

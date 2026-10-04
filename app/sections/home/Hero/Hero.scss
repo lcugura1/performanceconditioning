@@ -1,198 +1,196 @@
 .hero {
-  @include screen-section;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  // cijeli hero (s karticom brojki) stane u ekran; na niskim ekranima raste
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
 
-  > .wrap {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
+  &__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.06);
+      animation: heroZoom 2.4s var(--ease) both;
+    }
   }
 
-  // ---------- naslov u stepenicama ----------
-  &__title {
-    --step: clamp(0rem, 11vw, 12rem);
+  &__shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(90deg, rgba(11, 11, 11, 0.78) 0%, rgba(11, 11, 11, 0.35) 45%, rgba(11, 11, 11, 0) 70%),
+      linear-gradient(
+        180deg,
+        rgba(11, 11, 11, 0.55) 0%,
+        rgba(11, 11, 11, 0.15) 35%,
+        rgba(11, 11, 11, 0.35) 60%,
+        rgba(11, 11, 11, 0.95) 100%
+      );
+  }
 
-    margin-bottom: clamp(1.25rem, 4vh, 3rem);
-    font-size: clamp(2.75rem, min(6.4vw, 10vh), 6.75rem);
+  &__in {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: clamp(1rem, 3svh, 3rem);
+    width: 100%;
+    padding-top: calc(var(--hdr) + clamp(0.75rem, 3svh, 4rem));
+    padding-bottom: clamp(1rem, 3svh, 3.5rem);
+  }
 
-    @include below(xs) {
-      --step: 0.75rem;
-    }
+  // Naslov: dva bloka, drugi uvučen; svaki redak se podiže iz maske
+  &__h {
+    display: grid;
+    grid-template-columns: 1fr;
+    // ograničen i visinom ekrana, da četiri retka ne guraju ostatak ispod pregiba
+    font-size: clamp(3rem, min(8.6vw, 10.5svh), 8.75rem);
 
     .ln {
       display: block;
       overflow: hidden;
-      padding-bottom: 0.06em;
-
-      &:nth-child(2) { padding-left: var(--step); }
-      &:nth-child(3) { padding-left: calc(var(--step) * 2); }
+      padding-bottom: 0.04em;
 
       > span {
-        display: inline-block;
+        display: block;
         animation: rise 1.1s var(--ease) both;
       }
     }
 
-    .serif {
-      font-size: 1.06em;
-      letter-spacing: -0.02em;
+    @include below(phone) {
+      font-size: clamp(3rem, 15vw, 4.5rem);
     }
   }
 
-  // ---------- fotka lijevo, tekst desno ----------
-  &__stage {
-    flex: 1 1 0;
-    min-height: 0;
-    display: grid;
-    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
-    grid-template-rows: minmax(0, 1fr);
-    gap: clamp(1.5rem, 3vw, 3rem);
-    align-items: start; // CTA ostaje iznad pregiba
+  &__l {
+    grid-column: 1;
+  }
 
-    // uži ekrani: sadržaj teče prirodno, hero raste koliko treba
-    @include below(lg) {
-      flex: none;
-      grid-template-columns: 1fr;
-      grid-template-rows: auto;
+  &__r {
+    grid-column: 1;
+    margin-top: 0.04em;
+    padding-left: 1.1em;
+
+    @include below(phone) {
+      padding-left: 0.6em;
     }
   }
 
-  &__aside {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 24px;
-
-    @include below(lg) {
-      grid-row: 1;
-    }
+  &__bottom {
+    max-width: 44rem;
   }
 
-  &__meta {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.5;
-    color: var(--muted);
-
-    b {
-      color: var(--ink);
-    }
+  &__third {
+    margin: 0 0 clamp(0.6rem, 1.6svh, 1.25rem);
+    font: 500 clamp(1.5rem, 2.4vw, 2.25rem)/1 var(--font-sans);
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
   }
 
   &__lead {
-    margin: 0;
-    max-width: 30ch;
-    font-size: clamp(18px, 1.5vw, 21px);
-    line-height: 1.5;
-
-    @include below(lg) {
-      max-width: 42ch;
-    }
-  }
-
-  &__cta {
-    @include below(xs) {
-      width: 100%;
-    }
-  }
-
-  &__figure {
-    position: relative;
-    display: flex;
-    align-self: stretch; // popuni cijelu visinu retka (tekst desno ostaje gore)
-    min-height: 0;
-    margin: 0;
-
-    // na mobitelu brojke idu ispod fotke, da je ne prekriju
-    @include below(sm) {
-      flex-direction: column;
-      gap: 12px;
-    }
-  }
-
-  // fotka popunjava preostalu visinu ekrana
-  &__media {
-    flex: 1;
-    border-radius: 4px;
-
-    @include below(lg) {
-      flex: none;
-      aspect-ratio: 16 / 10;
-    }
-
-    @include below(sm) {
-      aspect-ratio: 4 / 3;
-    }
-
-    // apsolutno, da prirodna visina slike ne gura redak grida
-    img {
-      position: absolute;
-      inset: 0;
-      transform-origin: center;
-      will-change: transform;
-    }
+    max-width: 34rem;
+    margin: 0 0 clamp(1rem, 2.6svh, 2rem);
+    color: #d4d4d2;
+    font-size: clamp(1.0625rem, 1.2vw, 1.2rem);
+    line-height: 1.55;
   }
 }
 
-// ---------- brojke u staklu preko fotke ----------
-.hstats {
-  position: absolute;
-  left: clamp(0.75rem, 1.5vw, 1.25rem);
-  right: clamp(0.75rem, 1.5vw, 1.25rem);
-  bottom: clamp(0.75rem, 1.5vw, 1.25rem);
+// Staklena kartica brojki
+.gstats {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   margin: 0;
-  padding: clamp(0.875rem, 1.4vw, 1.25rem) 0;
+  padding: clamp(1rem, min(2.6vw, 3svh), 2.1rem) clamp(1.25rem, 3vw, 2.75rem);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 1.25rem;
+  color: var(--ink);
+  background: on-dark(0.7);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 1.5rem 3.75rem -1.5rem rgba(0, 0, 0, 0.65);
 
-  @include below(sm) {
-    position: static;
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    background: on-dark(0.95);
+  }
+
+  @include below(tablet) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    row-gap: 14px;
+    row-gap: 1.25rem;
+  }
+}
+
+.gstat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0 1.5rem;
+
+  &:first-child {
+    padding-left: 0;
   }
 
-  &__item {
-    display: flex;
-    flex-direction: column-reverse; // broj vizualno iznad oznake, u DOM-u dt pa dd
-    justify-content: flex-end;
-    gap: 4px;
-    padding-inline: clamp(0.875rem, 1.6vw, 1.5rem);
+  & + & {
+    border-left: 1px solid ink-a(0.16);
+  }
 
-    & + & {
-      border-left: 1px solid var(--line);
+  @include below(tablet) {
+    &:nth-child(3) {
+      padding-left: 0;
+      border-left: 0;
     }
 
-    @include below(sm) {
-      &:nth-child(3) {
-        border-left: 0;
-      }
+    &:nth-child(-n + 2) {
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid ink-a(0.16);
     }
   }
 
-  &__num {
+  &__n {
+    order: -1;
     margin: 0;
-    font: 700 clamp(26px, 2.6vw, 42px)/1 var(--font-display);
-    letter-spacing: -0.04em;
-    font-variant-numeric: tabular-nums;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2rem, min(4vw, 6svh), 3.75rem);
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
 
-    &.serif {
-      font-family: var(--font-serif);
-      font-weight: 400;
-      letter-spacing: -0.01em;
+    &--sm {
+      font-size: clamp(1.5rem, min(2.6vw, 4svh), 2.4rem);
+      line-height: 1.05;
     }
   }
 
-  &__lbl {
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 1.35;
-    color: var(--muted);
+  &__l {
+    max-width: 14rem;
+    color: #4a4a46;
+    font-size: 0.9375rem;
+    line-height: 1.4;
+  }
+}
+
+@keyframes heroZoom {
+  from {
+    transform: scale(1.14);
+  }
+  to {
+    transform: scale(1.06);
   }
 }
 
 @include reduced-motion {
-  .hero__title .ln > span {
+  .hero__bg img,
+  .hero__h .ln > span {
     animation: none;
   }
 }

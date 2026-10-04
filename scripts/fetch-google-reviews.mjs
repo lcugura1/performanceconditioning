@@ -31,6 +31,24 @@ function shortName(name) {
   return last ? `${first} ${last[0].toUpperCase()}.` : first;
 }
 
+// Svrstavanje u skupinu (app/content/types.ts → Audience) po punom tekstu.
+// Prvo djeca, pa rehabilitacija; sve ostalo su sportaši. Krive pogotke
+// ispravlja reviewAudienceOverrides u app/content/site.ts.
+const AUDIENCE_KEYWORDS = [
+  [
+    "djeca",
+    /\b(sin|sina|sinu|sinom|k[cć]i|k[cć]er\w*|dijete|djeteta|djetetu|djeca|djece|djeci|djecom|klinac|klinc\w*|roditelj\w*)\b/i,
+  ],
+  [
+    "rehab",
+    /\b(ozlj?ed\w*|ozlijed\w*|rehab\w*|operacij\w*|operira\w*|koljen\w*|kri[zž]n\w*|ligament\w*|menisk\w*|fizio\w*|oporav\w*|istegnu\w*|puknu\w*|bolov\w*)\b/i,
+  ],
+];
+
+function audienceOf(text) {
+  return AUDIENCE_KEYWORDS.find(([, re]) => re.test(text))?.[0] ?? "sportasi";
+}
+
 /** Skraćuje na granici riječi, kao ručno unesene recenzije. */
 function clip(text) {
   const clean = text.replace(/\s+/g, " ").trim();
@@ -59,7 +77,12 @@ try {
     }))
     .filter((r) => r.text && r.author)
     .sort((a, b) => (b.time ?? "").localeCompare(a.time ?? ""))
-    .map((r) => ({ quote: clip(r.text), author: shortName(r.author), source: "Google recenzija" }));
+    .map((r) => ({
+      quote: clip(r.text),
+      author: shortName(r.author),
+      source: "Google recenzija",
+      audience: audienceOf(r.text),
+    }));
 
   const data = {
     rating: place.rating ?? null,

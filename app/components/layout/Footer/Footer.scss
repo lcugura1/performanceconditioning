@@ -1,83 +1,82 @@
-// Kompaktan, centriran footer: znak + ime, podnaslov, red linkova, ©.
 .foot {
-  padding: clamp(3rem, 8vh, 4.5rem) 0 clamp(2rem, 5vh, 3rem);
-  border-top: 1px solid on-dark(0.1);
-  background: var(--ink);
-  color: var(--paper);
+  border-top: 1px solid var(--line);
+  background: var(--bg);
 
   &__in {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 1.25rem;
+    padding-block: clamp(2.5rem, 6vh, 4rem) clamp(1.5rem, 4vh, 2.5rem);
     text-align: center;
   }
 
-  &__brand {
-    display: flex;
-    align-items: center;
-    gap: clamp(0.625rem, 1.2vw, 0.875rem);
-    color: var(--paper);
-    text-decoration: none;
-
-    @include below(xs) {
-      flex-direction: column;
-    }
-
-    &:hover {
-      color: var(--paper);
-    }
-  }
-
-  &__mark {
-    height: clamp(2.25rem, 4vw, 3.25rem);
-    width: auto;
-    transition: transform 520ms var(--ease-bounce);
-  }
-
-  &__brand:hover &__mark {
-    transform: translateY(-3px);
-  }
-
-  &__name {
-    font: 700 clamp(1.5rem, 4vw, 3.25rem)/1 var(--font-display);
-    letter-spacing: -0.04em;
-    white-space: nowrap;
-  }
-
   &__sub {
-    display: flex;
-    gap: 12px;
-    margin: 14px 0 0;
-    font-size: 14px;
-    font-weight: 600;
-    color: on-dark(0.5);
+    margin: -0.5rem 0 0;
+    color: var(--faint);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
   }
 
-  &__links {
+  // jedan red linkova velikim slovima
+  &__nav,
+  &__social {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 8px 28px;
-    margin: clamp(1.75rem, 4vh, 2.5rem) 0 0;
-    padding: 0;
-    list-style: none;
-    font-size: 16px;
+    gap: 0.5rem 1.75rem;
+  }
+
+  &__nav a {
+    @include caps;
+    color: var(--muted);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--text);
+    }
+  }
+
+  &__contact {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem 1.5rem;
+    font-size: 0.875rem;
+    color: #d4d4d2;
 
     a {
-      color: on-dark(0.72);
       text-decoration: none;
-      transition: color 200ms var(--ease-out-soft);
 
       &:hover {
-        color: var(--accent);
+        text-decoration: underline;
       }
     }
   }
 
-  &__copy {
-    margin: clamp(1rem, 3vh, 1.5rem) 0 0;
-    font-size: 13px;
-    font-weight: 600;
-    color: on-dark(0.45);
+  // mreže: Archivo, podcrtano, lime na hover (kao u dizajnu kontakta)
+  &__social a {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.125rem;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+
+    &:hover {
+      color: var(--text);
+      text-decoration-color: var(--accent);
+    }
+  }
+
+  &__legal {
+    width: 100%;
+    margin: 0.5rem 0 0;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    color: var(--faint);
+    font-size: 0.75rem;
   }
 }

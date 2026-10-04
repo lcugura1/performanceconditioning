@@ -1,221 +1,113 @@
 .rev {
-  @include screen-section;
-  --rev-interval: 3s; // mora odgovarati INTERVAL u Reviews.tsx
-
-  &--rotates {
-    cursor: pointer;
-  }
-
-  &__title {
-    margin-bottom: clamp(1.5rem, 5vh, 3.5rem);
-    padding-bottom: clamp(1rem, 3vh, 1.75rem);
-    border-bottom: 1px solid var(--ink);
-  }
+  padding: clamp(5rem, 12vh, 8rem) 0;
+  border-top: 1px solid var(--line);
 
   &__grid {
     display: grid;
-    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-    gap: clamp(2rem, 5vw, 5rem);
-    align-items: stretch;
+    grid-template-columns: minmax(0, 4fr) repeat(3, minmax(0, 3fr));
 
-    @include below(lg) {
+    @include below(nav) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      row-gap: 3rem;
+    }
+
+    @include below(tablet) {
       grid-template-columns: 1fr;
     }
   }
 
-  // ---------- ocjena + fotka ----------
-  &__side {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(1rem, 3vh, 2rem);
-  }
-
   &__score {
     display: flex;
-    align-items: flex-end;
-    gap: 16px;
-  }
-
-  &__num {
-    font: 700 clamp(72px, min(8vw, 13vh), 136px)/0.8 var(--font-display);
-    letter-spacing: -0.05em;
-  }
-
-  &__meta {
-    display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding-bottom: 4px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--muted);
-  }
+    gap: 1rem;
+    padding-right: 2rem;
 
-  &__photo {
-    flex: 1;
-    min-height: 12rem;
-    max-height: 40svh;
-    border-radius: 4px;
-
-    img {
-      position: absolute;
-      inset: 0;
-      object-position: 35% center;
-    }
-
-    @include below(lg) {
-      display: none;
-    }
-  }
-
-  // ---------- sve recenzije kao jedan odlomak ----------
-  &__main {
-    align-self: center;
-    display: flex;
-    flex-direction: column;
-    gap: clamp(1.25rem, 3vh, 2rem);
-  }
-
-  // sve stranice u istoj ćeliji: visina = najduža stranica, nema skakanja
-  &__pages {
-    display: grid;
-  }
-
-  &__flow {
-    grid-area: 1 / 1;
-    font-family: var(--font-serif);
-    font-size: clamp(24px, min(2.5vw, 4.4vh), 42px);
-    line-height: 1.28;
-    letter-spacing: -0.005em;
-    opacity: 0;
-    visibility: hidden;
-    transition:
-      opacity 0.5s ease,
-      visibility 0s linear 0.5s;
-
-    &.is-active {
-      opacity: 1;
-      visibility: visible;
-      transition: opacity 0.5s ease 0.15s;
-    }
-  }
-
-  // ---------- točke + pauza ----------
-  &__ctrl {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
-  &__dots {
-    display: flex;
-    gap: 6px;
-  }
-
-  &__dot {
-    position: relative;
-    width: 22px;
-    height: 3px;
-    overflow: hidden;
-    background: var(--line);
-
-    &.is-active {
-      background: var(--ink);
-    }
-
-    // traka napretka do sljedeće stranice
-    i {
-      position: absolute;
-      inset: 0;
-      background: var(--accent);
-      transform-origin: left;
-      animation: rev-progress var(--rev-interval) linear both;
-    }
-  }
-
-  &__toggle {
-    padding: 0;
-    border: 0;
-    background: none;
-    font: 600 13px/1 var(--font-sans);
-    color: var(--muted);
-    cursor: pointer;
-
-    &:hover,
-    &[aria-pressed="true"] {
-      color: var(--ink);
-    }
-  }
-
-  @include reduced-motion {
-    &__flow,
-    &__flow.is-active {
-      transition: none;
-    }
-  }
-
-  &__item {
-    display: inline;
-    margin: 0;
-
-    blockquote {
-      display: inline;
+    h2 {
       margin: 0;
     }
 
-    q {
-      quotes: "„" "“";
+    .disp {
+      font-size: clamp(5rem, 11vw, 10rem);
     }
 
-    figcaption {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 8px;
-      margin-left: 0.3em;
-      font-family: var(--font-sans);
-      font-size: 14px;
-      line-height: 1;
-      letter-spacing: 0;
-      color: var(--muted);
-      white-space: nowrap;
-
-      b {
-        color: var(--ink);
-        font-weight: 700;
-      }
+    @include below(nav) {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      align-items: flex-end;
+      gap: 2rem;
     }
 
-    // kosi potez između recenzija
-    & + &::before {
-      content: "";
-      display: inline-block;
-      width: 0.9em;
-      height: 0.2em;
-      margin: 0 0.45em 0.2em 0.35em;
-      background: var(--accent);
-      transform: skewX(-30deg);
-      vertical-align: middle;
+    @include below(tablet) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  &__src {
+    margin-top: 0.6rem;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--text);
+    }
+  }
+
+  .stars {
+    display: flex;
+    gap: 0.2rem;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+      fill: var(--text);
     }
   }
 }
 
-@keyframes rev-progress {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
-.stars {
+.rq {
   display: flex;
-  gap: 3px;
-  color: var(--ink);
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0 1.75rem;
+  border-left: 1px solid var(--line);
 
-  svg {
-    width: 16px;
-    height: 16px;
-    fill: currentColor;
+  p {
+    margin: 0;
+    color: #dcdcda;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+  }
+
+  footer {
+    margin-top: auto;
+    color: var(--faint);
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
+
+    b {
+      display: block;
+      margin-bottom: 0.2rem;
+      color: var(--text);
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+  }
+
+  @include below(nav) {
+    &:nth-child(2) {
+      padding-left: 0;
+      border-left: 0;
+    }
+  }
+
+  @include below(tablet) {
+    &,
+    &:nth-child(2) {
+      padding: 1.5rem 0 0;
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
   }
 }

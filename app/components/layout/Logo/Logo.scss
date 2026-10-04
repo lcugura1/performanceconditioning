@@ -1,24 +1,23 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.7rem;
   text-decoration: none;
-  color: var(--ink);
-  transition: color 300ms var(--ease-out-soft);
+  color: var(--text);
 
   &:hover {
-    color: inherit;
+    color: var(--text);
   }
 
   &__mark {
     display: block;
-    height: 1.75rem;
+    height: 1.6rem;
     width: auto;
   }
 
   &__word {
-    font: 600 0.6875rem/1.25 var(--font-sans);
-    letter-spacing: 0.22em;
+    font: 500 0.6875rem/1.2 var(--font-sans);
+    letter-spacing: 0.26em;
     text-transform: uppercase;
   }
 }

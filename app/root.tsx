@@ -8,7 +8,8 @@ export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
   {
     rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap",
+    // Archivo: veliki naslovi i brojke; Geist: sve ostalo
+    href: "https://fonts.googleapis.com/css2?family=Archivo:wght@600..900&family=Geist:wght@300..700&display=swap",
   },
 ];
 
@@ -54,14 +55,14 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
   return (
     <main className="wrap" style={{ paddingBlock: "8rem" }}>
-      <h1 className="h h2">{title}</h1>
+      <h1 className="title">{title}</h1>
       <p>{details}</p>
       {stack && (
         <pre style={{ overflowX: "auto" }}>
           <code>{stack}</code>
         </pre>
       )}
-      <a className="link" href="/">
+      <a className="ulink" href="/">
         Natrag na početnu
       </a>
     </main>

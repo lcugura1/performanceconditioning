@@ -1,0 +1,41 @@
+// Tipografski stilovi redizajna kao mixini, za mjesta gdje klasa (.disp,
+// .title, .label u base/_typography.scss) ne dolazi u obzir.
+
+// Veliki naslov: Archivo 800, velika slova, gusto
+@mixin disp {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.045em;
+  line-height: 0.86;
+}
+
+// Naslov sekcije: Geist 500, velika slova
+@mixin title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+// Sitna oznaka s razmakom: "Fokus", "Blog", "Google recenzije"
+@mixin label($size: 0.75rem) {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: $size;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+// Gumb/link s velikim slovima: nav, tabovi, filteri
+@mixin caps($size: 0.75rem, $tracking: 0.1em) {
+  font: 500 #{$size}/1 var(--font-sans);
+  letter-spacing: $tracking;
+  text-transform: uppercase;
+}

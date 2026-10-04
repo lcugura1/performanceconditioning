@@ -1,9 +1,9 @@
-// Papir (#f3f2ec) s prozirnošću — tekst i linije na tamnim sekcijama.
+// Svijetli tekst (#f2f2f0) s prozirnošću — linije i tekst na tamnoj pozadini.
 @function on-dark($alpha) {
-  @return rgba(243, 242, 236, $alpha);
+  @return rgba(242, 242, 240, $alpha);
 }
 
-// Tinta (#151614) s prozirnošću — sjene i linije na svijetlim sekcijama.
+// Tinta (#0b0b0b) s prozirnošću — linije i sjene na svijetlim površinama.
 @function ink-a($alpha) {
-  @return rgba(21, 22, 20, $alpha);
+  @return rgba(11, 11, 11, $alpha);
 }

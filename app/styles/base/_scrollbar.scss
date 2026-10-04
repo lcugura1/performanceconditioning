@@ -1,7 +1,7 @@
 @use "abstracts" as *;
 
 html {
-  scrollbar-color: var(--accent-deep) var(--paper-2);
+  scrollbar-color: #4a4a48 var(--bg);
   scrollbar-width: thin;
 }
 
@@ -11,16 +11,16 @@ html {
   }
 
   html::-webkit-scrollbar-track {
-    background: var(--paper-2);
+    background: var(--bg);
   }
 
   html::-webkit-scrollbar-thumb {
-    background: var(--accent-deep);
+    background: #4a4a48;
     border-radius: 999px;
-    border: 0.1875rem solid var(--paper-2);
+    border: 0.1875rem solid var(--bg);
 
     &:hover {
-      background: var(--ink);
+      background: var(--muted);
     }
   }
 }

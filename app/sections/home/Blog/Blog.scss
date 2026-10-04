@@ -1,0 +1,140 @@
+.blog {
+  padding: clamp(5rem, 12vh, 8rem) 0;
+  border-top: 1px solid var(--line);
+  background: var(--bg-2);
+
+  &__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2rem;
+    align-items: end;
+    margin-bottom: 2.5rem;
+
+    p {
+      justify-self: end;
+      max-width: 28rem;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    @include below(tablet) {
+      grid-template-columns: 1fr;
+
+      p {
+        justify-self: start;
+      }
+    }
+  }
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.fchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  padding: 0 1rem;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  @include caps;
+  cursor: pointer;
+  transition: background-color 0.25s, color 0.25s, border-color 0.25s;
+
+  &:hover {
+    border-color: var(--text);
+    color: var(--text);
+  }
+
+  &.is-on {
+    border-color: var(--text);
+    background: var(--text);
+    color: var(--ink);
+  }
+
+  sup {
+    font-size: 0.625rem;
+    opacity: 0.7;
+  }
+}
+
+.posts {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+// Redak članka; na hover se invertira u svijetlo
+.post {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) 11rem 11rem 6rem;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.4rem 1rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  text-decoration: none;
+  transition: background-color 0.3s, color 0.3s, padding 0.35s var(--ease);
+
+  &:hover {
+    padding-left: 1.5rem;
+    background: var(--text);
+    color: var(--ink);
+
+    .post__m,
+    .post__n {
+      color: #55554f;
+    }
+
+    .tag {
+      border-color: ink-a(0.3);
+      color: var(--ink);
+    }
+  }
+
+  &__n {
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    color: var(--faint);
+  }
+
+  &__t {
+    font: 500 clamp(1.05rem, 1.6vw, 1.35rem)/1.25 var(--font-sans);
+    letter-spacing: -0.01em;
+  }
+
+  &__m {
+    font-size: 0.8125rem;
+    color: var(--faint);
+  }
+
+  &__go {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  @include below(nav) {
+    grid-template-columns: 3rem minmax(0, 1fr) 9rem 6rem;
+
+    &__date {
+      display: none;
+    }
+  }
+
+  @include below(tablet) {
+    grid-template-columns: 2.5rem minmax(0, 1fr) 5.5rem;
+    gap: 1rem;
+
+    &__tag {
+      display: none;
+    }
+  }
+}

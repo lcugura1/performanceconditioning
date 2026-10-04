@@ -1,15 +1,11 @@
 @use "sass:map";
 
-// Točke loma iz dizajna (max-width, desktop-first).
+// Točke loma iz redizajna (max-width, desktop-first).
 $breakpoints: (
-  lg: 1080px, // hero/stats/programi/o meni/kontakt u jedan stupac
-  md: 959px, // nav sažet, sakriven logo tekst
-  sm: 720px, // popup postaje bottom sheet
-  xs: 640px, // mobitel: manji gutter i tipografija
+  nav: 1100px, // navigacija u burger izbornik, recenzije i o meni u manje stupaca
+  tablet: 820px, // većina rasporeda u jedan stupac
+  phone: 560px, // mobitel: bez CTA-a u headeru, manja tipografija
 );
-
-// Mobilni izbornik — mora odgovarati MENU_QUERY u app/components/layout/Header.
-$menu-breakpoint: 40rem;
 
 @mixin below($key) {
   @media (max-width: map.get($breakpoints, $key)) {
@@ -17,9 +13,22 @@ $menu-breakpoint: 40rem;
   }
 }
 
-@mixin menu-mode {
-  @media (width < $menu-breakpoint) {
+// Iznad točke loma (npr. desktop raspored iznad tableta).
+@mixin above($key) {
+  @media (min-width: map.get($breakpoints, $key) + 1) {
     @content;
+  }
+}
+
+// Sekcija koja se cijela čita bez skrolanja: na desktopu stane u ekran ispod
+// headera (sadržaj se skalira sa svh u samoj sekciji); na mobitelu raste normalno.
+@mixin fits-screen {
+  @include above(tablet) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100svh - var(--hdr));
+    padding-block: clamp(1.5rem, 5svh, 4rem);
   }
 }
 
@@ -27,15 +36,4 @@ $menu-breakpoint: 40rem;
   @media (prefers-reduced-motion: reduce) {
     @content;
   }
-}
-
-// Sekcija visoka točno jedan ekran. Gornji padding uključuje header koji je
-// fixed i prelazi preko vrha sekcije, pa skok iz navigacije ne treba scroll-margin.
-@mixin screen-section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 100vh;
-  min-height: 100svh;
-  padding-block: calc(var(--header-h) + var(--section-pad)) var(--section-pad);
 }

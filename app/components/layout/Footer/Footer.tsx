@@ -1,47 +1,60 @@
 import { Link } from "react-router";
-import { LogoMark } from "~/components/ui/LogoMark";
-import { contact, siteName } from "~/content/site";
+import { contact, contactNav, nav, siteName } from "~/content/site";
 import { scrollToSection } from "~/lib/scroll-to";
+import { Logo } from "../Logo/Logo";
 import "./Footer.scss";
 
+const links = contact.links.filter((l) => l.group === "direct");
+const instagram = contact.links.find((l) => l.label === "Instagram");
 const email = contact.links.find((l) => l.label === "Email");
-const social = contact.links.filter((l) => l.group === "social");
 
-const links = [
-  ...social.map((l) => ({ label: l.label.toLowerCase(), href: l.href, external: true })),
-  { label: "whatsapp", href: contact.whatsapp, external: true },
-  ...(email ? [{ label: "e-mail", href: email.href, external: false }] : []),
+const social = [
+  ...(instagram ? [{ label: "Instagram", href: instagram.href, external: true }] : []),
+  { label: "WhatsApp", href: contact.whatsapp, external: true },
+  ...(email ? [{ label: "E-mail", href: email.href, external: false }] : []),
 ];
 
+/** Kompaktno, centrirano podnožje: logo, podnaslov, navigacija, kontakt, mreže, ©. */
 export function Footer() {
-  // Na početnoj glatko skrolaj na vrh; drugdje pusti Link da navigira.
-  const toTop = (e: React.MouseEvent) => {
-    if (scrollToSection("top")) e.preventDefault();
+  // Na početnoj stranici glatko skrolaj; drugdje pusti Link da navigira na /#id.
+  const goTo = (id: string) => (e: React.MouseEvent) => {
+    if (scrollToSection(id)) e.preventDefault();
   };
 
   return (
-    <footer className="foot" data-theme="dark">
+    <footer className="foot">
       <div className="wrap foot__in">
-        <Link className="foot__brand" to="/#top" onClick={toTop}>
-          <LogoMark className="foot__mark" />
-          <span className="foot__name">{siteName}</span>
-        </Link>
+        <Logo onClick={goTo("top")} />
+        <p className="foot__sub">Kondicijski trener · Zagreb · uživo i online</p>
 
-        <p className="foot__sub">
-          Kondicijski trener <span aria-hidden="true">•</span> Zagreb
-        </p>
-
-        <ul className="foot__links">
-          {links.map((l) => (
-            <li key={l.label}>
-              <a href={l.href} {...(l.external && { target: "_blank", rel: "noopener" })}>
-                {l.label}
-              </a>
-            </li>
+        <nav className="foot__nav" aria-label="Podnožje">
+          {[...nav, contactNav].map((item) => (
+            <Link key={item.id} to={`/#${item.id}`} onClick={goTo(item.id)}>
+              {item.label}
+            </Link>
           ))}
-        </ul>
+        </nav>
 
-        <p className="foot__copy">© {new Date().getFullYear()}</p>
+        <div className="foot__contact">
+          {links.map((l) => (
+            <a key={l.label} href={l.href} {...(l.external && { target: "_blank", rel: "noopener" })}>
+              {l.value}
+            </a>
+          ))}
+        </div>
+
+        <div className="foot__social">
+          {social.map((l) => (
+            <a key={l.label} href={l.href} {...(l.external && { target: "_blank", rel: "noopener" })}>
+              {l.label}
+            </a>
+          ))}
+        </div>
+
+        <p className="foot__legal">
+          © {new Date().getFullYear()} {siteName}
+          {instagram && <> · {instagram.value}</>}
+        </p>
       </div>
     </footer>
   );
