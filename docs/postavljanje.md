@@ -172,7 +172,9 @@ Kod je u repou (preneseno iz capturedwella): `scripts/sync-drive.mjs` + `scripts
 
    ```sh
    set -a; . ./.env; set +a
-   for k in GOOGLE_SERVICE_ACCOUNT_JSON DRIVE_ROOT_FOLDER_ID R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY CLOUDFLARE_API_TOKEN; do
+   # JSON ključ ide iz fajla: `. ./.env` mu u shellu pojede navodnike
+   gh secret set GOOGLE_SERVICE_ACCOUNT_JSON -R lcugura1/performanceconditioning < ~/.secrets/performanceconditioning/drive-sync-key.json
+   for k in DRIVE_ROOT_FOLDER_ID R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY CLOUDFLARE_API_TOKEN; do
      printf '%s' "${!k}" | gh secret set "$k" -R lcugura1/performanceconditioning
    done
    gh variable set MEDIA_BASE -R lcugura1/performanceconditioning --body "$MEDIA_BASE"
@@ -186,7 +188,7 @@ Kod je u repou (preneseno iz capturedwella): `scripts/sync-drive.mjs` + `scripts
    set -a; . ./.env; set +a
    cd worker/sync-trigger
    npx wrangler deploy
-   printf '%s' "$GOOGLE_SERVICE_ACCOUNT_JSON" | npx wrangler secret put GOOGLE_SERVICE_ACCOUNT_JSON
+   npx wrangler secret put GOOGLE_SERVICE_ACCOUNT_JSON < ~/.secrets/performanceconditioning/drive-sync-key.json
    printf '%s' "$DRIVE_ROOT_FOLDER_ID" | npx wrangler secret put DRIVE_ROOT_FOLDER_ID
    npx wrangler secret put GITHUB_TOKEN    # zalijepi token iz koraka 1
    ```
