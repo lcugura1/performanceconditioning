@@ -286,11 +286,13 @@ Jedini realni troškovi koji se mogu pojaviti:
 - [ ] 2FA na `info@gabrijelperformance.com`, recovery mail potvrđen
 - [x] Drive mape (root `stranica`, ID `17s2iSsbYaopxNaiPVB5D9YXB0o60FNn5`)
 - [x] Cloud projekt, Drive API, service account, JSON ključ, mapa podijeljena kao Čitatelj (`npm run check:drive` prolazi)
-- [ ] Cloudflare račun, ti kao Super Admin, DNS izvezen s Kuhade i prepisan, SPF spojen, nameserveri promijenjeni
+- [x] Cloudflare račun, ti kao Super Admin
+- [ ] DNS izvezen s Kuhade i prepisan, SPF spojen, nameserveri promijenjeni
 - [ ] Provjera: WordPress i mail rade nakon promjene nameservera
-- [ ] R2 bucket `pc-media`, `img.` domena, R2 token, Workers API token
+- [x] R2 bucket `pc-media` (zasad javno preko r2.dev), R2 token, Workers API token
+- [ ] `img.performanceconditioning.hr` na R2, `MEDIA_BASE` prebačen s r2.dev
 - [ ] Odluka o mailu (3d)
-- [ ] Repo, GitHub token + podsjetnik, secrets, prvi deploy na workers.dev, okidač
+- [x] Repo, GitHub token + podsjetnik, secrets, prvi deploy na https://performanceconditioning.gabrijel.workers.dev, okidač
 - [ ] Blog: sync, rute, prenesen stari post
 - [ ] Recenzije: odluka A + B ili C
 - [ ] WordPress backup, uploads skinuti, `_redirects`
