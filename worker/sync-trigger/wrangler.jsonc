@@ -1,0 +1,27 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "performanceconditioning-sync-trigger",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-01",
+
+  // Svakih 5 minuta. Nepromijenjen Drive košta par list poziva i dva R2 čitanja,
+  // i ne pokreće ništa.
+  "triggers": { "crons": ["*/5 * * * *"] },
+
+  // Bez URL-a: Worker radi samo po rasporedu.
+  "workers_dev": false,
+  "preview_urls": false,
+
+  // Samo čita; u bucket piše jedino GitHub Action svojim tokenom.
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "pc-media" }],
+
+  "vars": {
+    "GITHUB_REPO": "lcugura1/performanceconditioning",
+    "GITHUB_WORKFLOW": "sync.yml",
+    "GITHUB_REF": "main",
+  },
+  // Tajne, iz ove mape: `npx wrangler secret put <IME>`
+  //   GOOGLE_SERVICE_ACCOUNT_JSON  DRIVE_ROOT_FOLDER_ID  GITHUB_TOKEN
+
+  "observability": { "enabled": true },
+}

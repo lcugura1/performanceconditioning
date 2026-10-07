@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Javna stranica: prerenderirani build kao statični fajlovi, bez skripte.
+  // Fotke se ne poslužuju odavde nego iz R2 (MEDIA_BASE), pa build ostaje malen.
+  "name": "performanceconditioning",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./build/client",
+  },
+
+  // Dok domena još pokazuje na WordPress, stranica živi na
+  // performanceconditioning.<subdomena>.workers.dev. Domena se dodaje u Fazi 7.
+  "workers_dev": true,
+  "preview_urls": true,
+}

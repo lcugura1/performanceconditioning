@@ -165,42 +165,36 @@ Ovisi o odgovoru na Faza 0, pitanje 1:
 
 ## Faza 4: GitHub, sync i okidač
 
-Kod se uzima iz capturedwella gotovo neizmijenjen: `scripts/lib/{google-auth,drive,r2,image-pipeline,sync-plan,env}.mjs`, `scripts/sync-drive.mjs`, `.github/workflows/sync.yml`, `worker/sync-trigger/`. Mijenjaju se imena mapa, bucket (`pc-media`) i domena. Hosting prelazi s Pages deploy hooka (trenutni `refresh-reviews.yml`) na Worker sa static assetima, kao capturedwell. To je dio koji radim ja u kodu.
+Kod je u repou (preneseno iz capturedwella): `scripts/sync-drive.mjs` + `scripts/lib/`, `scripts/fetch-media.mjs`, `wrangler.jsonc` (stranica kao Worker sa static assetima), `.github/workflows/sync.yml`, `worker/sync-trigger/`. Repo: `lcugura1/performanceconditioning` (javan: Actions minute neograničene, logovi javni, pa sync ispisuje samo Drive id-eve).
 
-1. **github.com/new** → ime `performanceconditioning` → **Private** (2000 besplatnih minuta mjesečno je dovoljno) → Create. Pushaj ovaj repo.
-2. **github.com/settings/personal-access-tokens/new** (Fine-grained):
-   - Token name: `pc-sync-trigger`
-   - Expiration: najdulje što nudi (Custom → 1 godina)
-   - Repository access: **Only select repositories** → `performanceconditioning`
-   - Repository permissions → **Actions: Read and write**, ništa drugo
-   - **Generate token** → zapiši → `GITHUB_TOKEN` za Worker.
-   - U kalendar stavi podsjetnik **tjedan dana prije isteka**. Kad istekne, sync stane (stranica radi, samo se ne ažurira).
-3. Repo → **Settings → Secrets and variables → Actions → New repository secret**, jedan po jedan:
-
-   | Secret | Odakle |
-   |---|---|
-   | `GOOGLE_SERVICE_ACCOUNT_JSON` | cijeli sadržaj JSON fajla (Faza 2d) |
-   | `DRIVE_ROOT_FOLDER_ID` | `17s2iSsbYaopxNaiPVB5D9YXB0o60FNn5` |
-   | `R2_ACCOUNT_ID` | Faza 3b/4 |
-   | `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` | Faza 3b/5 |
-   | `CLOUDFLARE_API_TOKEN` | Faza 3c |
-   | `CLOUDFLARE_ACCOUNT_ID` | isto kao `R2_ACCOUNT_ID` |
-
-4. Merge u `main` (workflow mora postojati na grani na koju Worker cilja, inače Worker dobiva 404).
-5. Repo → **Actions → sync → Run workflow** → kvačica `deploy` → Run. Prvi deploy napravi stranicu na `performanceconditioning.<račun>.workers.dev`. Tu Gabrijel pregledava stranicu dok WordPress radi na domeni.
-6. Okidač, u terminalu iz `worker/sync-trigger/`:
+1. **GitHub token za okidač:** github.com/settings/personal-access-tokens/new → `pc-sync-trigger`, 1 godina, samo repo `lcugura1/performanceconditioning`, **Actions: Read and write**. Podsjetnik u kalendar tjedan dana prije isteka: kad istekne, sync stane (stranica radi, samo se ne ažurira).
+2. **Tajne u GitHub** (iz roota repoa, čita lokalni `.env`):
 
    ```sh
-   npx wrangler login          # prijava tvojim Cloudflare loginom, odaberi Gabrijelov račun
-   npx wrangler deploy
-   npx wrangler secret put GOOGLE_SERVICE_ACCOUNT_JSON
-   npx wrangler secret put DRIVE_ROOT_FOLDER_ID   # zalijepi: 17s2iSsbYaopxNaiPVB5D9YXB0o60FNn5
-   npx wrangler secret put GITHUB_TOKEN
+   set -a; . ./.env; set +a
+   for k in GOOGLE_SERVICE_ACCOUNT_JSON DRIVE_ROOT_FOLDER_ID R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY CLOUDFLARE_API_TOKEN; do
+     printf '%s' "${!k}" | gh secret set "$k" -R lcugura1/performanceconditioning
+   done
+   gh variable set MEDIA_BASE -R lcugura1/performanceconditioning --body "$MEDIA_BASE"
    ```
 
-7. Obriši JSON ključ s diska.
-8. Cloudflare → **Workers & Pages → sync-trigger → Logs** (Live): unutar 5 min redak „bez promjena”.
-9. Test: ubaci fotku u `galerija/` → u Actionsu se pojavi run unutar 5 min → fotka na workers.dev unutar ~10 min.
+3. Commit i push na `main` (workflow mora postojati na grani na koju okidač cilja).
+4. **Actions → sync → Run workflow** → kvačica `deploy` → Run. Prvi deploy napravi `performanceconditioning.<subdomena>.workers.dev`; tu Gabrijel pregledava stranicu dok WordPress radi na domeni.
+5. **Okidač** (iz roota repoa):
+
+   ```sh
+   set -a; . ./.env; set +a
+   cd worker/sync-trigger
+   npx wrangler deploy
+   printf '%s' "$GOOGLE_SERVICE_ACCOUNT_JSON" | npx wrangler secret put GOOGLE_SERVICE_ACCOUNT_JSON
+   printf '%s' "$DRIVE_ROOT_FOLDER_ID" | npx wrangler secret put DRIVE_ROOT_FOLDER_ID
+   npx wrangler secret put GITHUB_TOKEN    # zalijepi token iz koraka 1
+   ```
+
+6. Cloudflare → **Workers & Pages → performanceconditioning-sync-trigger → Logs**: unutar 5 min redak „bez promjena”.
+7. Test: ubaci fotku u `galerija/` → run u Actionsu unutar 5 min → fotka na workers.dev za ~10 min.
+
+Lokalno: `npm run sync` (s R2 ključevima u `.env` piše u R2, bez njih u `public/media`), `npm run dev` povlači manifest s `MEDIA_BASE`.
 
 ## Faza 5: Blog iz Google Docsa
 
